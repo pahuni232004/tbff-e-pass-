@@ -504,8 +504,8 @@
     }
 
     #qrcode {
-      width: 170px;
-      height: 170px;
+      width: 200px;
+      height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -517,8 +517,8 @@
     }
 
     .qr-placeholder {
-      width: 170px;
-      height: 170px;
+      width: 200px;
+      height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1120,11 +1120,11 @@
       qrcodeDiv.innerHTML = '';
       new QRCode(qrcodeDiv, {
         text: JSON.stringify(qrData),
-        width: 170,
-        height: 170,
+        width: 200,
+        height: 200,
         colorDark: '#000000',
         colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.L
+        correctLevel: QRCode.CorrectLevel.H
       });
 
       // Save to list
