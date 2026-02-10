@@ -777,8 +777,8 @@
       document.getElementById('placeholder').style.display = 'none';
       
       const config = {
-        fps: 10,
-        qrbox: { width: 220, height: 220 },
+        fps: 15,
+        qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0
       };
 
@@ -843,9 +843,25 @@
 
     function processQRData(data) {
       try {
-        const pass = JSON.parse(data);
+        const rawData = JSON.parse(data);
         
-        if (!pass.passId || !pass.passId.startsWith('TBFF-')) {
+        // Handle both old format (passId, name, etc.) and new compact format (id, n, d, f, t)
+        let pass;
+        if (rawData.id && rawData.id.startsWith('TBFF-')) {
+          // New compact format
+          pass = {
+            passId: rawData.id,
+            name: rawData.n,
+            designation: rawData.d,
+            filmTitle: rawData.f,
+            filmType: rawData.t,
+            phone: rawData.p,
+            email: rawData.e
+          };
+        } else if (rawData.passId && rawData.passId.startsWith('TBFF-')) {
+          // Old format - use as is
+          pass = rawData;
+        } else {
           playSound('error');
           showInvalidResult('Not a valid TBFF pass');
           return;
@@ -860,6 +876,7 @@
           addToHistory(pass);
         }
       } catch (e) {
+        console.error('QR Parse Error:', e, data);
         playSound('error');
         showInvalidResult('Invalid QR code format');
       }

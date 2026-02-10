@@ -1103,15 +1103,25 @@
       // Update preview
       previewPassId.textContent = passId;
 
-      // Generate QR code
+      // Generate QR code with minimal data for better scanning
+      const qrData = {
+        id: currentPassData.passId,
+        n: currentPassData.name,
+        d: currentPassData.designation,
+        f: currentPassData.filmTitle,
+        t: currentPassData.filmType,
+        p: currentPassData.phone || '',
+        e: currentPassData.email || ''
+      };
+      
       qrcodeDiv.innerHTML = '';
       new QRCode(qrcodeDiv, {
-        text: JSON.stringify(currentPassData),
+        text: JSON.stringify(qrData),
         width: 170,
         height: 170,
-        colorDark: '#1a0a2e',
+        colorDark: '#000000',
         colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
+        correctLevel: QRCode.CorrectLevel.L
       });
 
       // Save to list
