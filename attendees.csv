@@ -1,0 +1,13 @@
+name,email,phone,film_title,film_type,designation
+Rajesh Kumar,rajesh@example.com,9876543210,The Silent Valley,competition,Director
+Priya Sharma,priya@example.com,9876543211,The Silent Valley,competition,Producer
+Amit Verma,amit@example.com,9876543212,The Silent Valley,competition,Cinematographer
+Sneha Patel,sneha@example.com,9876543213,The Silent Valley,competition,Actor
+Vikram Singh,vikram@example.com,9876543214,The Silent Valley,competition,Editor
+Ananya Desai,ananya@example.com,9876543215,Monsoon Dreams,showcase,Director
+Karan Mehta,karan@example.com,9876543216,Monsoon Dreams,showcase,Producer
+Neha Gupta,neha@example.com,9876543217,Monsoon Dreams,showcase,Writer
+Rohit Joshi,rohit@example.com,9876543218,Monsoon Dreams,showcase,Actor
+Meera Nair,meera@example.com,9876543219,Monsoon Dreams,showcase,Actor
+Suresh Iyer,suresh@example.com,9876543220,Monsoon Dreams,showcase,Composer
+Divya Menon,divya@example.com,9876543221,Monsoon Dreams,showcase,Costume Designer

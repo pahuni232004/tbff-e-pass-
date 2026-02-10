@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Generated passes (local only)
+passes/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Local env
+.env
+.env.local

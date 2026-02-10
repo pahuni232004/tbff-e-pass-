@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TBFF E-Pass System | The Bhopal Film Festival 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #0a0612 0%, #1a0a2e 40%, #2d1b4e 70%, #1a0a2e 100%);
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(212,175,55,0.5) 50px, rgba(212,175,55,0.5) 51px),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(212,175,55,0.5) 50px, rgba(212,175,55,0.5) 51px);
+    }
+
+    .floating-reel {
+      position: fixed;
+      font-size: 120px;
+      opacity: 0.02;
+      animation: float 20s ease-in-out infinite;
+    }
+    .reel-1 { top: 10%; left: 5%; animation-delay: 0s; }
+    .reel-2 { top: 60%; right: 10%; animation-delay: -7s; }
+    .reel-3 { bottom: 10%; left: 15%; animation-delay: -14s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(10deg); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 60px 0 80px;
+    }
+
+    .logo-wrapper {
+      display: inline-block;
+      position: relative;
+    }
+
+    .logo-accent {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      letter-spacing: 8px;
+      color: #D4AF37;
+      text-transform: uppercase;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #D4AF37 0%, #f4e4a6 25%, #D4AF37 50%, #CD7F32 75%, #D4AF37 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+      line-height: 1.2;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .logo-year {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #CD7F32;
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    .tagline {
+      margin-top: 20px;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    /* Cards */
+    .action-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+
+    .action-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .action-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(212, 175, 55, 0.4);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.1);
+    }
+
+    .action-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 25px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(205,127,50,0.1) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      transition: all 0.3s;
+    }
+
+    .action-card:hover .card-icon {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, rgba(212,175,55,0.3) 0%, rgba(205,127,50,0.2) 100%);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: white;
+    }
+
+    .card-desc {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .card-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #D4AF37 0%, #CD7F32 100%);
+      color: #1a0a2e;
+      font-weight: 600;
+      padding: 14px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.3);
+    }
+
+    .card-btn:hover {
+      box-shadow: 0 6px 30px rgba(212,175,55,0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Features */
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 80px;
+      flex-wrap: wrap;
+    }
+
+    .feature {
+      text-align: center;
+      max-width: 200px;
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #D4AF37;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 100px;
+      padding: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.9rem;
+    }
+
+    .built-by {
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #D4AF37;
+    }
+
+    .stat-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 30px 0 50px; }
+      .logo { font-size: 2rem; }
+      .logo-year { font-size: 0.9rem; }
+      .logo-accent { font-size: 0.7rem; letter-spacing: 4px; }
+      .tagline { font-size: 0.95rem; }
+      .main-content { gap: 20px; }
+      .action-card { padding: 28px 22px; }
+      .card-icon { width: 80px; height: 80px; font-size: 2.5rem; }
+      .card-title { font-size: 1.5rem; }
+      .card-desc { font-size: 0.9rem; }
+      .card-btn { padding: 12px 28px; font-size: 0.9rem; }
+      .stats-bar { gap: 25px; }
+      .stat-value { font-size: 2rem; }
+      .features { gap: 25px; margin-top: 50px; }
+      .feature { max-width: 150px; }
+      footer { margin-top: 60px; padding: 25px 15px; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 15px; }
+      header { padding: 25px 0 40px; }
+      .logo { font-size: 1.6rem; }
+      .logo-year { font-size: 0.8rem; }
+      .logo-accent { font-size: 0.6rem; letter-spacing: 3px; top: -15px; }
+      .tagline { font-size: 0.85rem; letter-spacing: 1px; }
+      .main-content { grid-template-columns: 1fr; }
+      .action-card { padding: 25px 20px; border-radius: 18px; }
+      .card-icon { width: 70px; height: 70px; font-size: 2rem; margin-bottom: 20px; }
+      .card-title { font-size: 1.3rem; }
+      .card-desc { font-size: 0.85rem; margin-bottom: 20px; }
+      .card-btn { padding: 12px 24px; font-size: 0.85rem; }
+      .stats-bar { flex-direction: row; gap: 15px; padding: 12px; }
+      .stat-value { font-size: 1.6rem; }
+      .stat-label { font-size: 0.6rem; }
+      .features { flex-direction: column; align-items: center; }
+      .feature { max-width: 100%; }
+      .built-by { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  <div class="floating-reel reel-1">🎬</div>
+  <div class="floating-reel reel-2">🎞️</div>
+  <div class="floating-reel reel-3">🎥</div>
+
+  <div class="container">
+    <header>
+      <div class="logo-wrapper">
+        <span class="logo-accent">Welcome to</span>
+        <h1 class="logo">The Bhopal Film Festival</h1>
+        <div class="logo-year">21 - 22 February 2026</div>
+      </div>
+      <p class="tagline">E-Pass Management System</p>
+    </header>
+
+    <div class="main-content">
+      <a href="create-pass.html" class="action-card">
+        <div class="card-icon">🎫</div>
+        <h2 class="card-title">Create E-Pass</h2>
+        <p class="card-desc">
+          Generate QR code passes for filmmakers. Fill in the details, download the pass, and send it to them via email.
+        </p>
+        <span class="card-btn">Create New Pass →</span>
+      </a>
+
+      <a href="scanner.html" class="action-card">
+        <div class="card-icon">📷</div>
+        <h2 class="card-title">Scan & Verify</h2>
+        <p class="card-desc">
+          Verify attendee passes at the venue entrance. Scan QR codes to see all details and track entries.
+        </p>
+        <span class="card-btn">Open Scanner →</span>
+      </a>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Passes per Competition Film</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Passes per Showcase Film</div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">✨</div>
+        <div class="feature-title">Beautiful Passes</div>
+        <div class="feature-desc">Elegant pass design ready to print or display on phone</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Secure QR</div>
+        <div class="feature-desc">Each pass has unique ID embedded in QR code</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Instant Verify</div>
+        <div class="feature-desc">Scan and verify in under a second</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Track Entries</div>
+        <div class="feature-desc">Scanner remembers all scans with timestamps</div>
+      </div>
+    </div>
+
+    <footer>
+      <p>🎬 The Bhopal Film Festival 2026 — E-Pass System</p>
+      <p class="built-by">
+        <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'" style="height: 16px; opacity: 0.5; vertical-align: middle; margin-right: 6px;">
+        Built with ❤️ by <strong>etwot</strong>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

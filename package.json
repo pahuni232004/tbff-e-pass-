@@ -1,0 +1,12 @@
+{
+  "name": "tbff-epass",
+  "version": "1.0.0",
+  "description": "E-Pass System for The Bhopal Film Festival 2026 - Built by etwot",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": ["film-festival", "e-pass", "qr-code", "tbff"],
+  "author": "etwot",
+  "license": "MIT"
+}

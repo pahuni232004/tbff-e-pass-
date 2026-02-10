@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create E-Pass | TBFF 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #0a0612 0%, #1a0a2e 40%, #2d1b4e 70%, #0f0520 100%);
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.02;
+      background-image: 
+        radial-gradient(circle at 25% 25%, #D4AF37 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, #D4AF37 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.1;
+      pointer-events: none;
+    }
+    
+    .glow-1 { top: -200px; left: -200px; background: #D4AF37; }
+    .glow-2 { bottom: -200px; right: -200px; background: #7c3aed; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 25px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 35px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      padding: 10px 18px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .back-btn:hover { 
+      color: #D4AF37; 
+      background: rgba(212, 175, 55, 0.1);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #D4AF37 0%, #f4e4a6 50%, #CD7F32 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .etwot-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .etwot-badge img {
+      height: 18px;
+      opacity: 0.7;
+    }
+
+    /* Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 35px;
+      align-items: start;
+    }
+
+    @media (max-width: 950px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Section */
+    .form-section {
+      background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #D4AF37, #ff6b35, #D4AF37);
+    }
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .form-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-title-icon {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .pass-counter {
+      text-align: right;
+    }
+
+    .pass-counter-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #D4AF37;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .pass-counter-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-label .required {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+    }
+
+    .form-label-icon {
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      color: white;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #D4AF37;
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 0 0 4px rgba(212,175,55,0.1);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255,255,255,0.25);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      padding-right: 50px;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #1a0a2e;
+      color: white;
+      padding: 10px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* Film type selector */
+    .film-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .film-type-option {
+      position: relative;
+    }
+
+    .film-type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .film-type-option label {
+      display: block;
+      padding: 18px;
+      background: rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .film-type-option input:checked + label {
+      border-color: #D4AF37;
+      background: rgba(212,175,55,0.1);
+    }
+
+    .film-type-option label:hover {
+      border-color: rgba(212,175,55,0.5);
+    }
+
+    .film-type-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .film-type-passes {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .competition-label .film-type-name { color: #D4AF37; }
+    .showcase-label .film-type-name { color: #ff6b35; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 32px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #D4AF37 0%, #CD7F32 100%);
+      color: #1a0a2e;
+      box-shadow: 0 4px 25px rgba(212,175,55,0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(212,175,55,0.45);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Preview Section */
+    .preview-section {
+      position: sticky;
+      top: 25px;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .preview-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preview-badge {
+      font-size: 0.7rem;
+      padding: 5px 12px;
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+      border-radius: 20px;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Pass Card */
+    .pass-card {
+      background: linear-gradient(145deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+      border: 3px solid transparent;
+      border-image: linear-gradient(135deg, #D4AF37, #CD7F32, #D4AF37) 1;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+
+    .pass-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .pass-header {
+      background: linear-gradient(135deg, #D4AF37 0%, #CD7F32 100%);
+      padding: 22px;
+      text-align: center;
+      position: relative;
+    }
+
+    .pass-header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 10px solid #CD7F32;
+    }
+
+    .pass-festival-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a0a2e;
+    }
+
+    .pass-year {
+      color: #1a0a2e;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .pass-type-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 12px;
+    }
+
+    .badge-competition {
+      background: #1a0a2e;
+      color: #D4AF37;
+    }
+
+    .badge-showcase {
+      background: #ff6b35;
+      color: white;
+    }
+
+    .pass-body {
+      padding: 35px 25px 25px;
+      text-align: center;
+    }
+
+    .pass-holder-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      min-height: 2.2rem;
+    }
+
+    .pass-designation {
+      color: #D4AF37;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 22px;
+      min-height: 1.5rem;
+    }
+
+    .pass-film-info {
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .pass-film-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      min-height: 1.5rem;
+    }
+
+    .pass-film-type {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 6px;
+    }
+
+    .qr-container {
+      background: white;
+      padding: 16px;
+      border-radius: 18px;
+      display: inline-block;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    #qrcode {
+      width: 170px;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #qrcode canvas, #qrcode img {
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    .qr-placeholder {
+      width: 170px;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 0.8rem;
+      text-align: center;
+      border: 2px dashed #ddd;
+      border-radius: 10px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .qr-placeholder-icon {
+      font-size: 2rem;
+      opacity: 0.4;
+    }
+
+    .pass-id {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1.5px;
+    }
+
+    .pass-footer {
+      background: rgba(0,0,0,0.35);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .pass-footer-text {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 8px;
+    }
+
+    .pass-built-by {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .pass-built-by img {
+      height: 12px;
+      opacity: 0.5;
+    }
+
+    /* Download buttons */
+    .download-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      color: #052e16;
+      box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(74, 222, 128, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-email:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    @media (max-width: 950px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .preview-section { position: static; order: -1; margin-bottom: 25px; }
+      .pass-card { max-width: 400px; margin: 0 auto; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 15px; }
+      .header { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 25px; }
+      .page-title { font-size: 1.6rem; }
+      .back-btn { padding: 8px 14px; font-size: 0.85rem; }
+      .etwot-badge { align-self: flex-start; }
+      .form-section { padding: 22px 18px; border-radius: 18px; }
+      .form-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+      .pass-counter { text-align: left; }
+      .form-title { font-size: 1.1rem; }
+      .form-title-icon { width: 38px; height: 38px; font-size: 1.2rem; }
+      .form-label { font-size: 0.85rem; }
+      .form-input, .form-select { padding: 14px 16px; font-size: 0.95rem; border-radius: 12px; }
+      .film-type-selector { grid-template-columns: 1fr; gap: 10px; }
+      .film-type-option label { padding: 14px; }
+      .btn { padding: 15px 24px; font-size: 0.95rem; border-radius: 12px; }
+      .saved-passes { margin-top: 28px; padding-top: 22px; }
+      .saved-item { padding: 12px 14px; }
+      .pass-card { border-radius: 18px; }
+      .pass-header { padding: 18px; }
+      .pass-festival-name { font-size: 1.2rem; }
+      .pass-body { padding: 25px 18px 20px; }
+      .pass-holder-name { font-size: 1.5rem; }
+      .pass-designation { font-size: 0.9rem; margin-bottom: 18px; }
+      .pass-film-info { padding: 14px; margin-bottom: 20px; }
+      .pass-film-title { font-size: 1rem; }
+      .qr-container { padding: 12px; border-radius: 14px; }
+      #qrcode { width: 150px; height: 150px; }
+      .qr-placeholder { width: 150px; height: 150px; }
+      .download-actions { grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
+      .footer { margin-top: 35px; padding: 20px 15px; }
+    }
+
+    @media (max-width: 400px) {
+      .form-row { grid-template-columns: 1fr; }
+      .pass-holder-name { font-size: 1.3rem; }
+      #qrcode { width: 140px; height: 140px; }
+      .qr-placeholder { width: 140px; height: 140px; }
+    }
+
+    /* Alert */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .alert-success {
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+
+    .alert-icon {
+      font-size: 1.3rem;
+    }
+
+    /* Saved passes */
+    .saved-passes {
+      margin-top: 35px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .saved-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .saved-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .saved-count {
+      background: linear-gradient(135deg, #D4AF37, #CD7F32);
+      color: #1a0a2e;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .saved-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .saved-list::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.3);
+      border-radius: 4px;
+    }
+
+    .saved-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.03);
+      padding: 14px 18px;
+      border-radius: 12px;
+      border-left: 4px solid #D4AF37;
+      transition: all 0.2s;
+    }
+
+    .saved-item:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateX(4px);
+    }
+
+    .saved-item-info h4 {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .saved-item-info p {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 3px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .saved-item-type {
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .type-competition {
+      background: rgba(212,175,55,0.15);
+      color: #D4AF37;
+      border: 1px solid rgba(212,175,55,0.3);
+    }
+
+    .type-showcase {
+      background: rgba(255,107,53,0.15);
+      color: #ff6b35;
+      border: 1px solid rgba(255,107,53,0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .empty-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 25px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.8rem;
+    }
+
+    .footer-brand img {
+      height: 16px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="container">
+    <div class="header">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <h1 class="page-title">Create E-Pass</h1>
+      <div class="etwot-badge">
+        <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'">
+        Built by <strong>etwot</strong>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- Form Section -->
+      <div class="form-section">
+        <div class="form-header">
+          <h2 class="form-title">
+            <span class="form-title-icon">🎫</span>
+            <span>Pass Details</span>
+          </h2>
+          <div class="pass-counter">
+            <div class="pass-counter-value" id="passCounterValue">0</div>
+            <div class="pass-counter-label">Passes Created</div>
+          </div>
+        </div>
+        
+        <div id="alert" class="alert">
+          <span class="alert-icon"></span>
+          <span class="alert-text"></span>
+        </div>
+        
+        <form id="passForm">
+          <div class="form-group">
+            <label class="form-label">
+              <span class="form-label-icon">👤</span>
+              Full Name <span class="required">*</span>
+            </label>
+            <input type="text" id="name" class="form-input" placeholder="Enter pass holder's full name" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="form-label-icon">📧</span>
+                Email
+              </label>
+              <input type="email" id="email" class="form-input" placeholder="email@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <span class="form-label-icon">📱</span>
+                Phone
+              </label>
+              <input type="tel" id="phone" class="form-input" placeholder="9876543210">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span class="form-label-icon">🎬</span>
+              Film Title <span class="required">*</span>
+            </label>
+            <input type="text" id="filmTitle" class="form-input" placeholder="Enter the film title" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span class="form-label-icon">🏆</span>
+              Film Category <span class="required">*</span>
+            </label>
+            <div class="film-type-selector">
+              <div class="film-type-option">
+                <input type="radio" name="filmType" id="competition" value="competition">
+                <label for="competition" class="competition-label">
+                  <div class="film-type-name">🥇 Competition</div>
+                  <div class="film-type-passes">5 passes allowed</div>
+                </label>
+              </div>
+              <div class="film-type-option">
+                <input type="radio" name="filmType" id="showcase" value="showcase">
+                <label for="showcase" class="showcase-label">
+                  <div class="film-type-name">🎭 Showcase</div>
+                  <div class="film-type-passes">8 passes allowed</div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span class="form-label-icon">💼</span>
+              Designation
+            </label>
+            <input type="text" id="designation" class="form-input" placeholder="e.g. Director, Producer, Actor">
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="generateBtn">
+            ✨ Generate E-Pass
+          </button>
+        </form>
+
+        <!-- Saved Passes List -->
+        <div class="saved-passes">
+          <div class="saved-header">
+            <span class="saved-title">
+              <span>📋</span>
+              Generated Passes
+            </span>
+            <span class="saved-count" id="passCount">0</span>
+          </div>
+          <div class="saved-list" id="savedList">
+            <div class="empty-state">
+              <div class="empty-state-icon">🎬</div>
+              <div>No passes generated yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="preview-section">
+        <div class="preview-header">
+          <h2 class="preview-title">
+            <span>👁️</span>
+            Live Preview
+          </h2>
+          <span class="preview-badge">● Real-time</span>
+        </div>
+
+        <div class="pass-card" id="passCard">
+          <div class="pass-header">
+            <div class="pass-festival-name">The Bhopal Film Festival</div>
+            <div class="pass-year">21 - 22 February 2026</div>
+            <div class="pass-type-badge badge-competition" id="previewBadge">COMPETITION FILM</div>
+          </div>
+          <div class="pass-body">
+            <div class="pass-holder-name" id="previewName">Your Name</div>
+            <div class="pass-designation" id="previewDesignation">Designation</div>
+            <div class="pass-film-info">
+              <div class="pass-film-title" id="previewFilm">Film Title</div>
+              <div class="pass-film-type" id="previewFilmType">Competition Selection</div>
+            </div>
+            <div class="qr-container">
+              <div id="qrcode">
+                <div class="qr-placeholder">
+                  <span class="qr-placeholder-icon">📱</span>
+                  <span>QR Code</span>
+                </div>
+              </div>
+            </div>
+            <div class="pass-id" id="previewPassId">TBFF-XXXXXXXX-XXX</div>
+          </div>
+          <div class="pass-footer">
+            <div class="pass-footer-text">Present this QR code at the venue entrance for verification</div>
+            <div class="pass-built-by">
+              <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'">
+              Built by etwot
+            </div>
+          </div>
+        </div>
+
+        <div class="download-actions" id="downloadActions" style="display: none;">
+          <button class="btn btn-success" onclick="downloadAsImage()">
+            📥 Download Image
+          </button>
+          <button class="btn btn-email" onclick="sendEmail()">
+            ✉️ Send via Email
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-brand">
+        <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'">
+        Built with ❤️ by <strong>etwot</strong>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Load saved passes from localStorage
+    let savedPasses = JSON.parse(localStorage.getItem('tbff_generated_passes') || '[]');
+    updateSavedList();
+
+    // Form elements
+    const form = document.getElementById('passForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const filmTitleInput = document.getElementById('filmTitle');
+    const designationInput = document.getElementById('designation');
+    const competitionRadio = document.getElementById('competition');
+    const showcaseRadio = document.getElementById('showcase');
+
+    // Preview elements
+    const previewName = document.getElementById('previewName');
+    const previewDesignation = document.getElementById('previewDesignation');
+    const previewFilm = document.getElementById('previewFilm');
+    const previewFilmType = document.getElementById('previewFilmType');
+    const previewBadge = document.getElementById('previewBadge');
+    const previewPassId = document.getElementById('previewPassId');
+    const qrcodeDiv = document.getElementById('qrcode');
+
+    let currentPassData = null;
+
+    // Real-time preview updates
+    nameInput.addEventListener('input', updatePreview);
+    emailInput.addEventListener('input', updatePreview);
+    phoneInput.addEventListener('input', updatePreview);
+    filmTitleInput.addEventListener('input', updatePreview);
+    designationInput.addEventListener('input', updatePreview);
+    competitionRadio.addEventListener('change', updatePreview);
+    showcaseRadio.addEventListener('change', updatePreview);
+
+    function getFilmType() {
+      if (competitionRadio.checked) return 'competition';
+      if (showcaseRadio.checked) return 'showcase';
+      return '';
+    }
+
+    function updatePreview() {
+      previewName.textContent = nameInput.value || 'Your Name';
+      previewDesignation.textContent = designationInput.value || 'Team Member';
+      previewFilm.textContent = filmTitleInput.value || 'Film Title';
+      
+      const filmType = getFilmType();
+      if (filmType === 'competition') {
+        previewFilmType.textContent = 'Competition Selection';
+        previewBadge.textContent = 'COMPETITION FILM';
+        previewBadge.className = 'pass-type-badge badge-competition';
+      } else if (filmType === 'showcase') {
+        previewFilmType.textContent = 'Showcase Selection';
+        previewBadge.textContent = 'SHOWCASE FILM';
+        previewBadge.className = 'pass-type-badge badge-showcase';
+      } else {
+        previewFilmType.textContent = 'Selection Type';
+        previewBadge.textContent = 'FILM TYPE';
+        previewBadge.className = 'pass-type-badge badge-competition';
+      }
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      generatePass();
+    });
+
+    function generatePass() {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const filmTitle = filmTitleInput.value.trim();
+      const filmType = getFilmType();
+      const designation = designationInput.value.trim() || 'Team Member';
+
+      if (!name || !filmTitle || !filmType) {
+        showAlert('Please fill in all required fields', 'error');
+        return;
+      }
+
+      // Generate unique pass ID
+      const passId = `TBFF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 3).toUpperCase()}`;
+
+      // Create pass data
+      currentPassData = {
+        passId,
+        name,
+        email,
+        phone,
+        filmTitle,
+        filmType,
+        designation,
+        festival: 'The Bhopal Film Festival | 21-22 Feb 2026',
+        generatedAt: new Date().toISOString()
+      };
+
+      // Update preview
+      previewPassId.textContent = passId;
+
+      // Generate QR code
+      qrcodeDiv.innerHTML = '';
+      new QRCode(qrcodeDiv, {
+        text: JSON.stringify(currentPassData),
+        width: 170,
+        height: 170,
+        colorDark: '#1a0a2e',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      // Save to list
+      savedPasses.unshift(currentPassData);
+      localStorage.setItem('tbff_generated_passes', JSON.stringify(savedPasses));
+      updateSavedList();
+
+      // Show download buttons
+      document.getElementById('downloadActions').style.display = 'grid';
+
+      showAlert(`Pass generated for ${name}!`, 'success');
+    }
+
+    function showAlert(message, type) {
+      const alert = document.getElementById('alert');
+      const icon = alert.querySelector('.alert-icon');
+      const text = alert.querySelector('.alert-text');
+      
+      icon.textContent = type === 'success' ? '✅' : '❌';
+      text.textContent = message;
+      alert.className = `alert alert-${type}`;
+      alert.style.display = 'flex';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 5000);
+    }
+
+    function updateSavedList() {
+      const list = document.getElementById('savedList');
+      const count = document.getElementById('passCount');
+      const counterValue = document.getElementById('passCounterValue');
+      
+      count.textContent = savedPasses.length;
+      counterValue.textContent = savedPasses.length;
+
+      if (savedPasses.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎬</div>
+            <div>No passes generated yet</div>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = savedPasses.slice(0, 20).map(pass => `
+        <div class="saved-item">
+          <div class="saved-item-info">
+            <h4>${pass.name}</h4>
+            <p>${pass.filmTitle} • ${pass.passId}</p>
+          </div>
+          <span class="saved-item-type type-${pass.filmType}">${pass.filmType}</span>
+        </div>
+      `).join('');
+    }
+
+    // Download as image - using pure Canvas API
+    async function downloadAsImage() {
+      if (!currentPassData) return;
+
+      const qrCanvas = qrcodeDiv.querySelector('canvas');
+      if (!qrCanvas) {
+        showAlert('Please generate a pass first', 'error');
+        return;
+      }
+      const qrDataUrl = qrCanvas.toDataURL('image/png');
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const scale = 2;
+      const width = 400;
+      const height = 620;
+      
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      ctx.scale(scale, scale);
+
+      // Background gradient
+      const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+      bgGradient.addColorStop(0, '#1a0a2e');
+      bgGradient.addColorStop(0.5, '#2d1b4e');
+      bgGradient.addColorStop(1, '#1a0a2e');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, width, height);
+
+      // Header background
+      const headerGradient = ctx.createLinearGradient(0, 0, width, 120);
+      headerGradient.addColorStop(0, '#D4AF37');
+      headerGradient.addColorStop(1, '#CD7F32');
+      ctx.fillStyle = headerGradient;
+      ctx.fillRect(0, 0, width, 120);
+
+      // Festival name
+      ctx.fillStyle = '#1a0a2e';
+      ctx.font = 'bold 24px Playfair Display, Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('The Bhopal Film Festival', width/2, 45);
+      
+      ctx.font = '16px DM Sans, Arial, sans-serif';
+      ctx.font = '14px DM Sans, Arial, sans-serif';
+      ctx.fillText('21 - 22 February 2026', width/2, 70);
+
+      // Film type badge
+      const badgeColor = currentPassData.filmType === 'competition' ? '#1a0a2e' : '#ff6b35';
+      const badgeText = currentPassData.filmType === 'competition' ? 'COMPETITION FILM' : 'SHOWCASE FILM';
+      ctx.fillStyle = badgeColor;
+      const badgeWidth = 140;
+      const badgeHeight = 26;
+      const badgeX = (width - badgeWidth) / 2;
+      const badgeY = 85;
+      
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 13);
+      ctx.fill();
+      
+      ctx.fillStyle = currentPassData.filmType === 'competition' ? '#D4AF37' : '#ffffff';
+      ctx.font = 'bold 10px DM Sans, Arial, sans-serif';
+      ctx.fillText(badgeText, width/2, badgeY + 17);
+
+      // Holder name
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 28px Playfair Display, Georgia, serif';
+      ctx.fillText(currentPassData.name, width/2, 170);
+
+      // Designation
+      ctx.fillStyle = '#D4AF37';
+      ctx.font = '16px DM Sans, Arial, sans-serif';
+      ctx.fillText(currentPassData.designation, width/2, 200);
+
+      // Film info box
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.roundRect(30, 220, width - 60, 70, 12);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 18px DM Sans, Arial, sans-serif';
+      ctx.fillText(currentPassData.filmTitle, width/2, 252);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '12px DM Sans, Arial, sans-serif';
+      ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, 275);
+
+      // QR Code background
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect((width - 170) / 2, 310, 170, 170, 16);
+      ctx.fill();
+
+      // Draw QR code
+      const qrImg = new Image();
+      qrImg.onload = function() {
+        ctx.drawImage(qrImg, (width - 150) / 2, 320, 150, 150);
+        
+        // Pass ID
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.font = '12px monospace';
+        ctx.fillText(currentPassData.passId, width/2, 510);
+
+        // Footer background
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(0, 540, width, 80);
+
+        // Footer text
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = '11px DM Sans, Arial, sans-serif';
+        ctx.fillText('Present this QR code at the venue entrance', width/2, 565);
+        
+        // Built by etwot
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.font = '10px DM Sans, Arial, sans-serif';
+        ctx.fillText('Built by etwot', width/2, 600);
+
+        // Download
+        const link = document.createElement('a');
+        link.download = `${currentPassData.passId}_${currentPassData.name.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        showAlert('Pass image downloaded!', 'success');
+      };
+      qrImg.src = qrDataUrl;
+    }
+
+    // Send via Email
+    function sendEmail() {
+      if (!currentPassData) return;
+
+      if (!currentPassData.email) {
+        showAlert('Please enter an email address for the pass holder', 'error');
+        document.getElementById('email').focus();
+        return;
+      }
+
+      const filmTypeLabel = currentPassData.filmType === 'competition' ? 'COMPETITION' : 'SHOWCASE';
+
+      const subject = encodeURIComponent(`Your E-Pass for The Bhopal Film Festival 2026 - ${currentPassData.name}`);
+      
+      const body = encodeURIComponent(`Dear ${currentPassData.name},
+
+Congratulations! Please find your E-Pass for The Bhopal Film Festival 2026 below.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PASS DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Name: ${currentPassData.name}
+Designation: ${currentPassData.designation}
+Film: ${currentPassData.filmTitle}
+Category: ${filmTypeLabel}
+Pass ID: ${currentPassData.passId}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📎 Your E-Pass is attached to this email. Please save it and present the QR code at the venue entrance for verification.
+
+Important Instructions:
+• Save the attached image and show it on your phone
+• Each pass is unique and can only be used once
+
+We look forward to seeing you at the festival!
+
+Best regards,
+The Bhopal Film Festival Team
+
+---
+Built by etwot
+`);
+
+      // Download image first
+      downloadAsImage();
+
+      setTimeout(() => {
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${currentPassData.email}&su=${subject}&body=${body}`;
+        const emailWindow = window.open(gmailUrl, '_blank');
+        
+        if (!emailWindow || emailWindow.closed) {
+          window.location.href = `mailto:${currentPassData.email}?subject=${subject}&body=${body}`;
+        }
+
+        showAlert(`Email compose opened! Attach the downloaded image and send.`, 'success');
+      }, 500);
+    }
+  </script>
+</body>
+</html>
