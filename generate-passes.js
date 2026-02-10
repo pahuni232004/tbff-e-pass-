@@ -265,7 +265,7 @@ function generatePassHTML(pass, qrDataUrl) {
     </div>
     <div class="pass-footer">
       <div class="footer-text">Present this QR code at the venue entrance for verification</div>
-      <div style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.3);">Built by etwot</div>
+      <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 500;">Built by ETWOT</div>
     </div>
   </div>
 </body>

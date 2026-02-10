@@ -97,12 +97,13 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.4);
-      padding: 8px 14px;
-      background: rgba(255,255,255,0.03);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.05);
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-weight: 500;
     }
 
     .etwot-badge img {
@@ -556,12 +557,13 @@
     }
 
     .pass-built-by {
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      font-weight: 500;
     }
 
     .pass-built-by img {
@@ -810,8 +812,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      color: rgba(255,255,255,0.35);
-      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+      font-weight: 500;
     }
 
     .footer-brand img {
@@ -831,7 +834,7 @@
       <h1 class="page-title">Create E-Pass</h1>
       <div class="etwot-badge">
         <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'">
-        Built by <strong>etwot</strong>
+        Built by <strong>ETWOT</strong>
       </div>
     </div>
 
@@ -1001,7 +1004,7 @@
     <footer class="footer">
       <div class="footer-brand">
         <img src="etwot-logo.avif" alt="etwot" onerror="this.style.display='none'">
-        Built with ❤️ by <strong>etwot</strong>
+        Built with ❤️ by <strong>ETWOT</strong>
       </div>
     </footer>
   </div>
@@ -1294,10 +1297,10 @@
         ctx.font = '11px DM Sans, Arial, sans-serif';
         ctx.fillText('Present this QR code at the venue entrance', width/2, 565);
         
-        // Built by etwot
-        ctx.fillStyle = 'rgba(255,255,255,0.35)';
-        ctx.font = '10px DM Sans, Arial, sans-serif';
-        ctx.fillText('Built by etwot', width/2, 600);
+        // Built by ETWOT
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = 'bold 12px DM Sans, Arial, sans-serif';
+        ctx.fillText('Built by ETWOT', width/2, 600);
 
         // Download
         const link = document.createElement('a');
