@@ -991,6 +991,9 @@
           <button class="btn btn-email" onclick="sendEmail()">
             ✉️ Send via Email
           </button>
+          <button class="btn btn-secondary" onclick="testScan()" style="grid-column: span 2;">
+            🔍 Test QR Data
+          </button>
         </div>
       </div>
     </div>
@@ -1363,6 +1366,32 @@ Built by etwot
 
         showAlert(`Email compose opened! Attach the downloaded image and send.`, 'success');
       }, 500);
+    }
+
+    // Test QR Data - shows what the scanner will see
+    function testScan() {
+      if (!currentPassData) {
+        showAlert('Please generate a pass first', 'error');
+        return;
+      }
+
+      const qrData = {
+        id: currentPassData.passId,
+        n: currentPassData.name,
+        d: currentPassData.designation,
+        f: currentPassData.filmTitle,
+        t: currentPassData.filmType,
+        p: currentPassData.phone || '',
+        e: currentPassData.email || ''
+      };
+
+      const jsonString = JSON.stringify(qrData);
+      
+      alert(`✅ QR Data (${jsonString.length} chars):\n\n${JSON.stringify(qrData, null, 2)}\n\n📋 This data is encoded in the QR code. The scanner will read this and verify the pass.`);
+      
+      console.log('QR Data:', qrData);
+      console.log('JSON String:', jsonString);
+      console.log('String length:', jsonString.length);
     }
   </script>
 </body>

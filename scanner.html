@@ -842,13 +842,17 @@
     }
 
     function processQRData(data) {
+      console.log('📷 Scanned QR Data:', data);
+      
       try {
         const rawData = JSON.parse(data);
+        console.log('✅ Parsed JSON:', rawData);
         
         // Handle both old format (passId, name, etc.) and new compact format (id, n, d, f, t)
         let pass;
         if (rawData.id && rawData.id.startsWith('TBFF-')) {
           // New compact format
+          console.log('📋 Detected: New compact format');
           pass = {
             passId: rawData.id,
             name: rawData.n,
@@ -860,13 +864,16 @@
           };
         } else if (rawData.passId && rawData.passId.startsWith('TBFF-')) {
           // Old format - use as is
+          console.log('📋 Detected: Old format');
           pass = rawData;
         } else {
+          console.log('❌ Invalid: No valid passId found', rawData);
           playSound('error');
           showInvalidResult('Not a valid TBFF pass');
           return;
         }
 
+        console.log('✅ Final pass object:', pass);
         const alreadyScanned = scanHistory.find(s => s.passId === pass.passId);
         
         playSound('success');
@@ -876,7 +883,8 @@
           addToHistory(pass);
         }
       } catch (e) {
-        console.error('QR Parse Error:', e, data);
+        console.error('❌ QR Parse Error:', e);
+        console.error('Raw data was:', data);
         playSound('error');
         showInvalidResult('Invalid QR code format');
       }
