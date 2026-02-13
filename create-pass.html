@@ -310,8 +310,13 @@
       color: rgba(255,255,255,0.5);
     }
 
+    .film-type-selector.three-cols {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
     .competition-label .film-type-name { color: #D4AF37; }
     .showcase-label .film-type-name { color: #ff6b35; }
+    .visitor-label .film-type-name { color: #60a5fa; }
 
     .btn {
       display: inline-flex;
@@ -450,6 +455,11 @@
     .badge-showcase {
       background: #ff6b35;
       color: white;
+    }
+
+    .badge-visitor {
+      background: #60a5fa;
+      color: #1a0a2e;
     }
 
     .pass-body {
@@ -883,38 +893,45 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="filmTitleGroup">
             <label class="form-label">
               <span class="form-label-icon">🎬</span>
               Film Title <span class="required">*</span>
             </label>
-            <input type="text" id="filmTitle" class="form-input" placeholder="Enter the film title" required>
+            <input type="text" id="filmTitle" class="form-input" placeholder="Enter the film title">
           </div>
 
           <div class="form-group">
             <label class="form-label">
               <span class="form-label-icon">🏆</span>
-              Film Category <span class="required">*</span>
+              Pass Category <span class="required">*</span>
             </label>
-            <div class="film-type-selector">
+            <div class="film-type-selector three-cols">
               <div class="film-type-option">
                 <input type="radio" name="filmType" id="competition" value="competition">
                 <label for="competition" class="competition-label">
                   <div class="film-type-name">🥇 Competition</div>
-                  <div class="film-type-passes">5 passes allowed</div>
+                  <div class="film-type-passes">5 passes</div>
                 </label>
               </div>
               <div class="film-type-option">
                 <input type="radio" name="filmType" id="showcase" value="showcase">
                 <label for="showcase" class="showcase-label">
                   <div class="film-type-name">🎭 Showcase</div>
-                  <div class="film-type-passes">8 passes allowed</div>
+                  <div class="film-type-passes">8 passes</div>
+                </label>
+              </div>
+              <div class="film-type-option">
+                <input type="radio" name="filmType" id="visitor" value="visitor">
+                <label for="visitor" class="visitor-label">
+                  <div class="film-type-name">🎟️ Visitor</div>
+                  <div class="film-type-passes">General entry</div>
                 </label>
               </div>
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="designationGroup">
             <label class="form-label">
               <span class="form-label-icon">💼</span>
               Designation
@@ -1023,6 +1040,9 @@
     const designationInput = document.getElementById('designation');
     const competitionRadio = document.getElementById('competition');
     const showcaseRadio = document.getElementById('showcase');
+    const visitorRadio = document.getElementById('visitor');
+    const filmTitleGroup = document.getElementById('filmTitleGroup');
+    const designationGroup = document.getElementById('designationGroup');
 
     // Preview elements
     const previewName = document.getElementById('previewName');
@@ -1041,21 +1061,37 @@
     phoneInput.addEventListener('input', updatePreview);
     filmTitleInput.addEventListener('input', updatePreview);
     designationInput.addEventListener('input', updatePreview);
-    competitionRadio.addEventListener('change', updatePreview);
-    showcaseRadio.addEventListener('change', updatePreview);
+    competitionRadio.addEventListener('change', handleCategoryChange);
+    showcaseRadio.addEventListener('change', handleCategoryChange);
+    visitorRadio.addEventListener('change', handleCategoryChange);
 
     function getFilmType() {
       if (competitionRadio.checked) return 'competition';
       if (showcaseRadio.checked) return 'showcase';
+      if (visitorRadio.checked) return 'visitor';
       return '';
+    }
+
+    function handleCategoryChange() {
+      const isVisitor = visitorRadio.checked;
+      filmTitleGroup.style.display = isVisitor ? 'none' : 'block';
+      designationGroup.style.display = isVisitor ? 'none' : 'block';
+      updatePreview();
     }
 
     function updatePreview() {
       previewName.textContent = nameInput.value || 'Your Name';
+      
+      const filmType = getFilmType();
+      const isVisitor = filmType === 'visitor';
+      
+      // Show/hide film info based on category
+      document.querySelector('.pass-film-info').style.display = isVisitor ? 'none' : 'block';
+      previewDesignation.style.display = isVisitor ? 'none' : 'block';
+      
       previewDesignation.textContent = designationInput.value || 'Team Member';
       previewFilm.textContent = filmTitleInput.value || 'Film Title';
       
-      const filmType = getFilmType();
       if (filmType === 'competition') {
         previewFilmType.textContent = 'Competition Selection';
         previewBadge.textContent = 'COMPETITION FILM';
@@ -1064,9 +1100,13 @@
         previewFilmType.textContent = 'Showcase Selection';
         previewBadge.textContent = 'SHOWCASE FILM';
         previewBadge.className = 'pass-type-badge badge-showcase';
+      } else if (filmType === 'visitor') {
+        previewFilmType.textContent = '';
+        previewBadge.textContent = 'VISITOR PASS';
+        previewBadge.className = 'pass-type-badge badge-visitor';
       } else {
         previewFilmType.textContent = 'Selection Type';
-        previewBadge.textContent = 'FILM TYPE';
+        previewBadge.textContent = 'PASS TYPE';
         previewBadge.className = 'pass-type-badge badge-competition';
       }
     }
@@ -1081,12 +1121,18 @@
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
       const phone = phoneInput.value.trim();
-      const filmTitle = filmTitleInput.value.trim();
       const filmType = getFilmType();
-      const designation = designationInput.value.trim() || 'Team Member';
+      const isVisitor = filmType === 'visitor';
+      const filmTitle = isVisitor ? '' : filmTitleInput.value.trim();
+      const designation = isVisitor ? 'Visitor' : (designationInput.value.trim() || 'Team Member');
 
-      if (!name || !filmTitle || !filmType) {
+      if (!name || !filmType) {
         showAlert('Please fill in all required fields', 'error');
+        return;
+      }
+
+      if (!isVisitor && !filmTitle) {
+        showAlert('Please enter the film title', 'error');
         return;
       }
 
@@ -1232,8 +1278,20 @@
       ctx.fillText('21 - 22 February 2026', width/2, 70);
 
       // Film type badge
-      const badgeColor = currentPassData.filmType === 'competition' ? '#1a0a2e' : '#ff6b35';
-      const badgeText = currentPassData.filmType === 'competition' ? 'COMPETITION FILM' : 'SHOWCASE FILM';
+      let badgeColor, badgeText, badgeTextColor;
+      if (currentPassData.filmType === 'competition') {
+        badgeColor = '#1a0a2e';
+        badgeText = 'COMPETITION FILM';
+        badgeTextColor = '#D4AF37';
+      } else if (currentPassData.filmType === 'showcase') {
+        badgeColor = '#ff6b35';
+        badgeText = 'SHOWCASE FILM';
+        badgeTextColor = '#ffffff';
+      } else {
+        badgeColor = '#60a5fa';
+        badgeText = 'VISITOR PASS';
+        badgeTextColor = '#1a0a2e';
+      }
       ctx.fillStyle = badgeColor;
       const badgeWidth = 140;
       const badgeHeight = 26;
@@ -1244,49 +1302,56 @@
       ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 13);
       ctx.fill();
       
-      ctx.fillStyle = currentPassData.filmType === 'competition' ? '#D4AF37' : '#ffffff';
+      ctx.fillStyle = badgeTextColor;
       ctx.font = 'bold 10px DM Sans, Arial, sans-serif';
       ctx.fillText(badgeText, width/2, badgeY + 17);
+
+      const isVisitor = currentPassData.filmType === 'visitor';
 
       // Holder name
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 28px Playfair Display, Georgia, serif';
-      ctx.fillText(currentPassData.name, width/2, 170);
+      ctx.fillText(currentPassData.name, width/2, isVisitor ? 180 : 170);
 
-      // Designation
-      ctx.fillStyle = '#D4AF37';
-      ctx.font = '16px DM Sans, Arial, sans-serif';
-      ctx.fillText(currentPassData.designation, width/2, 200);
+      // Designation (not for visitors)
+      if (!isVisitor) {
+        ctx.fillStyle = '#D4AF37';
+        ctx.font = '16px DM Sans, Arial, sans-serif';
+        ctx.fillText(currentPassData.designation, width/2, 200);
 
-      // Film info box
-      ctx.fillStyle = 'rgba(255,255,255,0.05)';
-      ctx.beginPath();
-      ctx.roundRect(30, 220, width - 60, 70, 12);
-      ctx.fill();
+        // Film info box
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.beginPath();
+        ctx.roundRect(30, 220, width - 60, 70, 12);
+        ctx.fill();
 
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 18px DM Sans, Arial, sans-serif';
-      ctx.fillText(currentPassData.filmTitle, width/2, 252);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 18px DM Sans, Arial, sans-serif';
+        ctx.fillText(currentPassData.filmTitle, width/2, 252);
 
-      ctx.fillStyle = 'rgba(255,255,255,0.5)';
-      ctx.font = '12px DM Sans, Arial, sans-serif';
-      ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, 275);
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = '12px DM Sans, Arial, sans-serif';
+        ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, 275);
+      }
 
+      // QR Code position - higher for visitors
+      const qrY = isVisitor ? 220 : 310;
+      
       // QR Code background
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.roundRect((width - 170) / 2, 310, 170, 170, 16);
+      ctx.roundRect((width - 170) / 2, qrY, 170, 170, 16);
       ctx.fill();
 
       // Draw QR code
       const qrImg = new Image();
       qrImg.onload = function() {
-        ctx.drawImage(qrImg, (width - 150) / 2, 320, 150, 150);
+        ctx.drawImage(qrImg, (width - 150) / 2, qrY + 10, 150, 150);
         
         // Pass ID
         ctx.fillStyle = 'rgba(255,255,255,0.4)';
         ctx.font = '12px monospace';
-        ctx.fillText(currentPassData.passId, width/2, 510);
+        ctx.fillText(currentPassData.passId, width/2, qrY + 195);
 
         // Footer background
         ctx.fillStyle = 'rgba(0,0,0,0.3)';

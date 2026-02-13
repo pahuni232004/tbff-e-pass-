@@ -415,6 +415,12 @@
       border: 1px solid rgba(255, 107, 53, 0.3);
     }
 
+    .badge-visitor {
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.25), rgba(96, 165, 250, 0.1));
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
     /* Scan History */
     .scan-history {
       background: rgba(255,255,255,0.03);
@@ -955,25 +961,28 @@
         ? '⚠️ Already scanned at ' + new Date(alreadyScanned.time).toLocaleTimeString() 
         : '✅ Entry permitted';
 
-      const badgeClass = pass.filmType === 'competition' ? 'badge-competition' : 'badge-showcase';
+      const isVisitor = pass.filmType === 'visitor';
+      let badgeClass = 'badge-competition';
+      if (pass.filmType === 'showcase') badgeClass = 'badge-showcase';
+      if (pass.filmType === 'visitor') badgeClass = 'badge-visitor';
       
       details.innerHTML = `
         <div class="detail-row">
           <span class="detail-label">Name</span>
           <span class="detail-value">${pass.name}</span>
         </div>
-        <div class="detail-row">
+        ${!isVisitor ? `<div class="detail-row">
           <span class="detail-label">Designation</span>
           <span class="detail-value">${pass.designation}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Film</span>
           <span class="detail-value">${pass.filmTitle}</span>
-        </div>
+        </div>` : ''}
         <div class="detail-row">
           <span class="detail-label">Category</span>
           <span class="detail-value">
-            <span class="film-type-badge ${badgeClass}">${pass.filmType}</span>
+            <span class="film-type-badge ${badgeClass}">${pass.filmType.toUpperCase()}</span>
           </span>
         </div>
         <div class="detail-row">
