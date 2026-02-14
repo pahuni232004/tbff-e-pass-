@@ -387,15 +387,16 @@
       50% { opacity: 0.6; }
     }
 
-    /* Pass Card */
+    /* Pass Card - Folk Art Template */
     .pass-card {
-      background: linear-gradient(145deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
-      border: 3px solid transparent;
-      border-image: linear-gradient(135deg, #D4AF37, #CD7F32, #D4AF37) 1;
-      border-radius: 24px;
+      background: url('app pass template.png') no-repeat center top;
+      background-size: cover;
+      border-radius: 0;
       overflow: hidden;
       box-shadow: 0 25px 80px rgba(0,0,0,0.5);
       transition: transform 0.3s;
+      aspect-ratio: 3/4;
+      position: relative;
     }
 
     .pass-card:hover {
@@ -403,36 +404,29 @@
     }
 
     .pass-header {
-      background: linear-gradient(135deg, #D4AF37 0%, #CD7F32 100%);
-      padding: 22px;
+      background: transparent;
+      padding: 15px 20px;
       text-align: center;
       position: relative;
+      padding-top: 25%;
     }
 
     .pass-header::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 10px solid #CD7F32;
+      display: none;
     }
 
     .pass-festival-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
-      color: #1a0a2e;
+      color: #8B1538;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
     }
 
     .pass-year {
-      color: #1a0a2e;
-      font-size: 0.9rem;
-      opacity: 0.7;
+      color: #8B1538;
+      font-size: 0.85rem;
+      font-weight: 600;
       margin-top: 2px;
     }
 
@@ -444,79 +438,87 @@
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-top: 12px;
+      margin-top: 10px;
+      border: 2px solid;
     }
 
     .badge-competition {
-      background: #1a0a2e;
-      color: #D4AF37;
+      background: #8B1538;
+      color: #E5B848;
+      border-color: #6B0F2A;
     }
 
     .badge-showcase {
       background: #ff6b35;
       color: white;
+      border-color: #e55a25;
     }
 
     .badge-visitor {
-      background: #60a5fa;
-      color: #1a0a2e;
+      background: #2E8B8B;
+      color: white;
+      border-color: #236B6B;
     }
 
     .pass-body {
-      padding: 35px 25px 25px;
+      padding: 15px 25px 20px;
       text-align: center;
     }
 
     .pass-holder-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      margin-bottom: 6px;
-      min-height: 2.2rem;
+      margin-bottom: 4px;
+      min-height: 2rem;
+      color: #4A1520;
     }
 
     .pass-designation {
-      color: #D4AF37;
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 22px;
-      min-height: 1.5rem;
+      color: #8B1538;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      min-height: 1.3rem;
     }
 
     .pass-film-info {
-      background: rgba(255,255,255,0.05);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 25px;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(139, 21, 56, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(139, 21, 56, 0.2);
     }
 
     .pass-film-title {
       font-weight: 700;
-      font-size: 1.1rem;
-      min-height: 1.5rem;
+      font-size: 1rem;
+      min-height: 1.3rem;
+      color: #4A1520;
     }
 
     .pass-film-type {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.45);
+      font-size: 0.75rem;
+      color: #8B1538;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-top: 6px;
+      margin-top: 4px;
+      font-weight: 600;
     }
 
     .qr-container {
       background: white;
-      padding: 16px;
-      border-radius: 18px;
+      padding: 10px;
+      border-radius: 12px;
       display: inline-block;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+      box-shadow: 0 4px 20px rgba(139, 21, 56, 0.25);
+      border: 3px solid #8B1538;
     }
 
     #qrcode {
-      width: 200px;
-      height: 200px;
+      width: 140px;
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -528,57 +530,62 @@
     }
 
     .qr-placeholder {
-      width: 200px;
-      height: 200px;
+      width: 140px;
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #aaa;
-      font-size: 0.8rem;
+      color: #8B1538;
+      font-size: 0.75rem;
       text-align: center;
-      border: 2px dashed #ddd;
-      border-radius: 10px;
+      border: 2px dashed #8B1538;
+      border-radius: 8px;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .qr-placeholder-icon {
-      font-size: 2rem;
-      opacity: 0.4;
+      font-size: 1.8rem;
+      opacity: 0.5;
     }
 
     .pass-id {
       font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 1.5px;
+      font-size: 0.65rem;
+      color: #8B1538;
+      letter-spacing: 1px;
+      opacity: 0.7;
     }
 
     .pass-footer {
-      background: rgba(0,0,0,0.35);
-      padding: 16px;
+      background: rgba(139, 21, 56, 0.9);
+      padding: 12px;
       text-align: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
 
     .pass-footer-text {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 8px;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 4px;
     }
 
     .pass-built-by {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.45);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       font-weight: 500;
     }
 
     .pass-built-by img {
-      height: 12px;
-      opacity: 0.5;
+      height: 10px;
+      opacity: 0.7;
     }
 
     /* Download buttons */
@@ -642,30 +649,35 @@
       .form-label { font-size: 0.85rem; }
       .form-input, .form-select { padding: 14px 16px; font-size: 0.95rem; border-radius: 12px; }
       .film-type-selector { grid-template-columns: 1fr; gap: 10px; }
+      .film-type-selector.three-cols { grid-template-columns: 1fr; }
       .film-type-option label { padding: 14px; }
       .btn { padding: 15px 24px; font-size: 0.95rem; border-radius: 12px; }
       .saved-passes { margin-top: 28px; padding-top: 22px; }
       .saved-item { padding: 12px 14px; }
-      .pass-card { border-radius: 18px; }
-      .pass-header { padding: 18px; }
-      .pass-festival-name { font-size: 1.2rem; }
-      .pass-body { padding: 25px 18px 20px; }
-      .pass-holder-name { font-size: 1.5rem; }
-      .pass-designation { font-size: 0.9rem; margin-bottom: 18px; }
-      .pass-film-info { padding: 14px; margin-bottom: 20px; }
-      .pass-film-title { font-size: 1rem; }
-      .qr-container { padding: 12px; border-radius: 14px; }
-      #qrcode { width: 150px; height: 150px; }
-      .qr-placeholder { width: 150px; height: 150px; }
+      .pass-card { max-width: 320px; margin: 0 auto; }
+      .pass-header { padding-top: 28%; }
+      .pass-festival-name { font-size: 1.1rem; }
+      .pass-body { padding: 12px 18px 15px; }
+      .pass-holder-name { font-size: 1.3rem; }
+      .pass-designation { font-size: 0.8rem; margin-bottom: 12px; }
+      .pass-film-info { padding: 10px; margin-bottom: 12px; }
+      .pass-film-title { font-size: 0.9rem; }
+      .qr-container { padding: 8px; border-radius: 10px; }
+      #qrcode { width: 120px; height: 120px; }
+      .qr-placeholder { width: 120px; height: 120px; }
+      .pass-footer { padding: 10px; }
+      .pass-footer-text { font-size: 0.6rem; }
+      .pass-built-by { font-size: 0.65rem; }
       .download-actions { grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
       .footer { margin-top: 35px; padding: 20px 15px; }
     }
 
     @media (max-width: 400px) {
       .form-row { grid-template-columns: 1fr; }
-      .pass-holder-name { font-size: 1.3rem; }
-      #qrcode { width: 140px; height: 140px; }
-      .qr-placeholder { width: 140px; height: 140px; }
+      .pass-card { max-width: 280px; }
+      .pass-holder-name { font-size: 1.1rem; }
+      #qrcode { width: 100px; height: 100px; }
+      .qr-placeholder { width: 100px; height: 100px; }
     }
 
     /* Alert */
@@ -1231,7 +1243,7 @@
       `).join('');
     }
 
-    // Download as image - using pure Canvas API
+    // Download as image - using template background
     async function downloadAsImage() {
       if (!currentPassData) return;
 
@@ -1242,138 +1254,265 @@
       }
       const qrDataUrl = qrCanvas.toDataURL('image/png');
 
+      // Load template image
+      const templateImg = new Image();
+      templateImg.crossOrigin = 'anonymous';
+      
+      templateImg.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const scale = 2;
+        const width = 400;
+        const height = 533; // 3:4 aspect ratio
+        
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        ctx.scale(scale, scale);
+
+        // Draw template background
+        ctx.drawImage(templateImg, 0, 0, width, height);
+
+        // Content starts below the folk art header (approximately 25% from top)
+        const contentStartY = height * 0.25;
+
+        // Festival name
+        ctx.fillStyle = '#8B1538';
+        ctx.font = 'bold 22px Playfair Display, Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('The Bhopal Film Festival', width/2, contentStartY + 25);
+        
+        ctx.font = 'bold 13px DM Sans, Arial, sans-serif';
+        ctx.fillText('21 - 22 February 2026', width/2, contentStartY + 45);
+
+        // Film type badge
+        let badgeColor, badgeText, badgeTextColor, badgeBorderColor;
+        if (currentPassData.filmType === 'competition') {
+          badgeColor = '#8B1538';
+          badgeText = 'COMPETITION FILM';
+          badgeTextColor = '#E5B848';
+          badgeBorderColor = '#6B0F2A';
+        } else if (currentPassData.filmType === 'showcase') {
+          badgeColor = '#ff6b35';
+          badgeText = 'SHOWCASE FILM';
+          badgeTextColor = '#ffffff';
+          badgeBorderColor = '#e55a25';
+        } else {
+          badgeColor = '#2E8B8B';
+          badgeText = 'VISITOR PASS';
+          badgeTextColor = '#ffffff';
+          badgeBorderColor = '#236B6B';
+        }
+        
+        const badgeWidth = 140;
+        const badgeHeight = 24;
+        const badgeX = (width - badgeWidth) / 2;
+        const badgeY = contentStartY + 55;
+        
+        // Badge border
+        ctx.fillStyle = badgeBorderColor;
+        ctx.beginPath();
+        ctx.roundRect(badgeX - 2, badgeY - 2, badgeWidth + 4, badgeHeight + 4, 14);
+        ctx.fill();
+        
+        // Badge fill
+        ctx.fillStyle = badgeColor;
+        ctx.beginPath();
+        ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 12);
+        ctx.fill();
+        
+        ctx.fillStyle = badgeTextColor;
+        ctx.font = 'bold 9px DM Sans, Arial, sans-serif';
+        ctx.fillText(badgeText, width/2, badgeY + 16);
+
+        const isVisitor = currentPassData.filmType === 'visitor';
+        let currentY = contentStartY + 100;
+
+        // Holder name
+        ctx.fillStyle = '#4A1520';
+        ctx.font = 'bold 26px Playfair Display, Georgia, serif';
+        ctx.fillText(currentPassData.name, width/2, currentY);
+        currentY += 25;
+
+        // Designation (not for visitors)
+        if (!isVisitor) {
+          ctx.fillStyle = '#8B1538';
+          ctx.font = '600 14px DM Sans, Arial, sans-serif';
+          ctx.fillText(currentPassData.designation, width/2, currentY);
+          currentY += 25;
+
+          // Film info box
+          ctx.fillStyle = 'rgba(139, 21, 56, 0.1)';
+          ctx.strokeStyle = 'rgba(139, 21, 56, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(40, currentY, width - 80, 55, 10);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#4A1520';
+          ctx.font = 'bold 16px DM Sans, Arial, sans-serif';
+          ctx.fillText(currentPassData.filmTitle, width/2, currentY + 25);
+
+          ctx.fillStyle = '#8B1538';
+          ctx.font = '600 10px DM Sans, Arial, sans-serif';
+          ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, currentY + 45);
+          
+          currentY += 70;
+        }
+
+        // QR Code
+        const qrSize = 130;
+        const qrX = (width - qrSize - 20) / 2;
+        const qrY = currentY;
+        
+        // QR Code border
+        ctx.fillStyle = '#8B1538';
+        ctx.beginPath();
+        ctx.roundRect(qrX - 5, qrY - 5, qrSize + 30, qrSize + 30, 14);
+        ctx.fill();
+        
+        // QR Code background
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(qrX, qrY, qrSize + 20, qrSize + 20, 10);
+        ctx.fill();
+
+        // Draw QR code
+        const qrImg = new Image();
+        qrImg.onload = function() {
+          ctx.drawImage(qrImg, qrX + 10, qrY + 10, qrSize, qrSize);
+          
+          // Pass ID
+          ctx.fillStyle = '#8B1538';
+          ctx.font = '10px monospace';
+          ctx.globalAlpha = 0.7;
+          ctx.fillText(currentPassData.passId, width/2, qrY + qrSize + 40);
+          ctx.globalAlpha = 1;
+
+          // Footer
+          const footerY = height - 50;
+          ctx.fillStyle = 'rgba(139, 21, 56, 0.95)';
+          ctx.fillRect(0, footerY, width, 50);
+
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.font = '10px DM Sans, Arial, sans-serif';
+          ctx.fillText('Present this QR code at the venue entrance', width/2, footerY + 18);
+          
+          ctx.fillStyle = 'rgba(255,255,255,0.75)';
+          ctx.font = 'bold 11px DM Sans, Arial, sans-serif';
+          ctx.fillText('Built by ETWOT', width/2, footerY + 36);
+
+          // Download
+          const link = document.createElement('a');
+          link.download = `${currentPassData.passId}_${currentPassData.name.replace(/\s+/g, '_')}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+
+          showAlert('Pass image downloaded!', 'success');
+        };
+        qrImg.src = qrDataUrl;
+      };
+      
+      templateImg.onerror = function() {
+        // Fallback to plain design if template fails to load
+        showAlert('Template image not found, using fallback design', 'error');
+        downloadAsImageFallback();
+      };
+      
+      templateImg.src = 'app pass template.png';
+    }
+
+    // Fallback download function without template
+    async function downloadAsImageFallback() {
+      const qrCanvas = qrcodeDiv.querySelector('canvas');
+      if (!qrCanvas) return;
+      const qrDataUrl = qrCanvas.toDataURL('image/png');
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const scale = 2;
       const width = 400;
-      const height = 620;
+      const height = 533;
       
       canvas.width = width * scale;
       canvas.height = height * scale;
       ctx.scale(scale, scale);
 
-      // Background gradient
-      const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-      bgGradient.addColorStop(0, '#1a0a2e');
-      bgGradient.addColorStop(0.5, '#2d1b4e');
-      bgGradient.addColorStop(1, '#1a0a2e');
-      ctx.fillStyle = bgGradient;
+      // Golden yellow background
+      ctx.fillStyle = '#E5B848';
       ctx.fillRect(0, 0, width, height);
-
-      // Header background
-      const headerGradient = ctx.createLinearGradient(0, 0, width, 120);
-      headerGradient.addColorStop(0, '#D4AF37');
-      headerGradient.addColorStop(1, '#CD7F32');
-      ctx.fillStyle = headerGradient;
-      ctx.fillRect(0, 0, width, 120);
+      
+      // Maroon border
+      ctx.strokeStyle = '#8B1538';
+      ctx.lineWidth = 15;
+      ctx.strokeRect(7.5, 7.5, width - 15, height - 15);
 
       // Festival name
-      ctx.fillStyle = '#1a0a2e';
+      ctx.fillStyle = '#8B1538';
       ctx.font = 'bold 24px Playfair Display, Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('The Bhopal Film Festival', width/2, 45);
-      
-      ctx.font = '16px DM Sans, Arial, sans-serif';
-      ctx.font = '14px DM Sans, Arial, sans-serif';
-      ctx.fillText('21 - 22 February 2026', width/2, 70);
+      ctx.fillText('The Bhopal Film Festival', width/2, 60);
+      ctx.font = 'bold 14px DM Sans, Arial, sans-serif';
+      ctx.fillText('21 - 22 February 2026', width/2, 85);
 
-      // Film type badge
-      let badgeColor, badgeText, badgeTextColor;
-      if (currentPassData.filmType === 'competition') {
-        badgeColor = '#1a0a2e';
-        badgeText = 'COMPETITION FILM';
-        badgeTextColor = '#D4AF37';
-      } else if (currentPassData.filmType === 'showcase') {
-        badgeColor = '#ff6b35';
-        badgeText = 'SHOWCASE FILM';
-        badgeTextColor = '#ffffff';
-      } else {
-        badgeColor = '#60a5fa';
-        badgeText = 'VISITOR PASS';
-        badgeTextColor = '#1a0a2e';
-      }
-      ctx.fillStyle = badgeColor;
-      const badgeWidth = 140;
-      const badgeHeight = 26;
-      const badgeX = (width - badgeWidth) / 2;
-      const badgeY = 85;
+      // Rest of the content...
+      const isVisitor = currentPassData.filmType === 'visitor';
       
+      // Badge
+      let badgeColor = currentPassData.filmType === 'competition' ? '#8B1538' : 
+                       currentPassData.filmType === 'showcase' ? '#ff6b35' : '#2E8B8B';
+      ctx.fillStyle = badgeColor;
       ctx.beginPath();
-      ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 13);
+      ctx.roundRect(130, 100, 140, 26, 13);
       ctx.fill();
       
-      ctx.fillStyle = badgeTextColor;
-      ctx.font = 'bold 10px DM Sans, Arial, sans-serif';
-      ctx.fillText(badgeText, width/2, badgeY + 17);
-
-      const isVisitor = currentPassData.filmType === 'visitor';
-
-      // Holder name
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 28px Playfair Display, Georgia, serif';
-      ctx.fillText(currentPassData.name, width/2, isVisitor ? 180 : 170);
+      ctx.font = 'bold 10px DM Sans, Arial, sans-serif';
+      ctx.fillText(currentPassData.filmType.toUpperCase() + (isVisitor ? ' PASS' : ' FILM'), width/2, 117);
 
-      // Designation (not for visitors)
+      // Name
+      ctx.fillStyle = '#4A1520';
+      ctx.font = 'bold 28px Playfair Display, Georgia, serif';
+      ctx.fillText(currentPassData.name, width/2, 170);
+
+      let qrY = 200;
       if (!isVisitor) {
-        ctx.fillStyle = '#D4AF37';
+        ctx.fillStyle = '#8B1538';
         ctx.font = '16px DM Sans, Arial, sans-serif';
         ctx.fillText(currentPassData.designation, width/2, 200);
-
-        // Film info box
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.beginPath();
-        ctx.roundRect(30, 220, width - 60, 70, 12);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#4A1520';
         ctx.font = 'bold 18px DM Sans, Arial, sans-serif';
-        ctx.fillText(currentPassData.filmTitle, width/2, 252);
-
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        ctx.font = '12px DM Sans, Arial, sans-serif';
-        ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, 275);
+        ctx.fillText(currentPassData.filmTitle, width/2, 250);
+        qrY = 280;
       }
 
-      // QR Code position - higher for visitors
-      const qrY = isVisitor ? 220 : 310;
-      
-      // QR Code background
+      // QR background
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.roundRect((width - 170) / 2, qrY, 170, 170, 16);
+      ctx.roundRect((width - 160) / 2, qrY, 160, 160, 12);
       ctx.fill();
 
-      // Draw QR code
       const qrImg = new Image();
       qrImg.onload = function() {
-        ctx.drawImage(qrImg, (width - 150) / 2, qrY + 10, 150, 150);
+        ctx.drawImage(qrImg, (width - 140) / 2, qrY + 10, 140, 140);
         
-        // Pass ID
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        ctx.font = '12px monospace';
-        ctx.fillText(currentPassData.passId, width/2, qrY + 195);
+        ctx.fillStyle = '#8B1538';
+        ctx.font = '11px monospace';
+        ctx.fillText(currentPassData.passId, width/2, qrY + 175);
 
-        // Footer background
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        ctx.fillRect(0, 540, width, 80);
+        // Footer
+        ctx.fillStyle = '#8B1538';
+        ctx.fillRect(0, height - 50, width, 50);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px DM Sans, Arial, sans-serif';
+        ctx.fillText('Present this QR code at the venue entrance', width/2, height - 32);
+        ctx.font = 'bold 11px DM Sans, Arial, sans-serif';
+        ctx.fillText('Built by ETWOT', width/2, height - 15);
 
-        // Footer text
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        ctx.font = '11px DM Sans, Arial, sans-serif';
-        ctx.fillText('Present this QR code at the venue entrance', width/2, 565);
-        
-        // Built by ETWOT
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        ctx.font = 'bold 12px DM Sans, Arial, sans-serif';
-        ctx.fillText('Built by ETWOT', width/2, 600);
-
-        // Download
         const link = document.createElement('a');
         link.download = `${currentPassData.passId}_${currentPassData.name.replace(/\s+/g, '_')}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-
-        showAlert('Pass image downloaded!', 'success');
       };
       qrImg.src = qrDataUrl;
     }

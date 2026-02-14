@@ -32,16 +32,17 @@ async function generatePasses() {
     const { name, email, phone, film_title, film_type, designation } = person;
 
     // Validate film type
-    if (!['competition', 'showcase'].includes(film_type.toLowerCase())) {
-      console.log(`⚠️  Skipping ${name}: Invalid film type "${film_type}" (must be 'competition' or 'showcase')`);
+    if (!['competition', 'showcase', 'visitor'].includes(film_type.toLowerCase())) {
+      console.log(`⚠️  Skipping ${name}: Invalid film type "${film_type}" (must be 'competition', 'showcase', or 'visitor')`);
       continue;
     }
 
-    // Track and validate pass count per film
-    const filmKey = `${film_title}-${film_type}`;
+    // Track and validate pass count per film (visitors have unlimited)
+    const isVisitor = film_type.toLowerCase() === 'visitor';
+    const filmKey = isVisitor ? `visitor-${name}` : `${film_title}-${film_type}`;
     filmPassCount[filmKey] = (filmPassCount[filmKey] || 0) + 1;
     
-    const maxPasses = film_type.toLowerCase() === 'competition' ? 5 : 8;
+    const maxPasses = isVisitor ? Infinity : (film_type.toLowerCase() === 'competition' ? 5 : 8);
     if (filmPassCount[filmKey] > maxPasses) {
       console.log(`❌ Skipping ${name}: ${film_title} (${film_type}) already has ${maxPasses} passes`);
       continue;
@@ -121,8 +122,31 @@ async function generatePasses() {
 }
 
 function generatePassHTML(pass, qrDataUrl) {
-  const filmTypeLabel = pass.filmType === 'competition' ? 'COMPETITION' : 'SHOWCASE';
-  const filmTypeColor = pass.filmType === 'competition' ? '#D4AF37' : '#ff6b35';
+  const isVisitor = pass.filmType === 'visitor';
+  let filmTypeLabel, badgeColor, badgeTextColor;
+  
+  if (pass.filmType === 'competition') {
+    filmTypeLabel = 'COMPETITION FILM';
+    badgeColor = '#8B1538';
+    badgeTextColor = '#E5B848';
+  } else if (pass.filmType === 'showcase') {
+    filmTypeLabel = 'SHOWCASE FILM';
+    badgeColor = '#ff6b35';
+    badgeTextColor = '#ffffff';
+  } else {
+    filmTypeLabel = 'VISITOR PASS';
+    badgeColor = '#2E8B8B';
+    badgeTextColor = '#ffffff';
+  }
+
+  const filmInfoSection = isVisitor ? '' : `
+      <div class="film-info">
+        <div class="film-title">${pass.filmTitle}</div>
+        <div class="film-type-badge">${pass.filmType.toUpperCase()} SELECTION</div>
+      </div>`;
+
+  const designationSection = isVisitor ? '' : `
+      <div class="designation">${pass.designation}</div>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -135,7 +159,7 @@ function generatePassHTML(pass, qrDataUrl) {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #0f0520 100%);
+      background: #E5B848;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -143,103 +167,126 @@ function generatePassHTML(pass, qrDataUrl) {
       padding: 20px;
     }
     .pass-card {
-      background: linear-gradient(145deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
-      border: 3px solid;
-      border-image: linear-gradient(135deg, #D4AF37, #CD7F32, #D4AF37) 1;
-      border-radius: 20px;
+      background: url('app pass template.png') no-repeat center top;
+      background-size: cover;
+      background-color: #E5B848;
+      border: 12px solid #8B1538;
+      border-radius: 0;
       padding: 0;
       max-width: 400px;
       width: 100%;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      aspect-ratio: 3/4;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
     .pass-header {
-      background: linear-gradient(135deg, #D4AF37 0%, #CD7F32 100%);
-      padding: 20px;
+      padding: 25% 20px 15px;
       text-align: center;
     }
     .festival-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
-      color: #1a0a2e;
-      margin-bottom: 5px;
+      color: #8B1538;
+    }
+    .festival-date {
+      color: #8B1538;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 2px;
     }
     .pass-type {
       display: inline-block;
-      background: ${filmTypeColor};
-      color: #1a0a2e;
-      padding: 4px 16px;
+      background: ${badgeColor};
+      color: ${badgeTextColor};
+      padding: 6px 18px;
       border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.7rem;
+      font-weight: 700;
       letter-spacing: 1px;
-      margin-top: 8px;
+      margin-top: 10px;
+      border: 2px solid ${badgeColor};
     }
     .pass-body {
-      padding: 30px;
+      padding: 15px 25px;
       text-align: center;
     }
     .holder-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: white;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #4A1520;
       margin-bottom: 5px;
     }
     .designation {
-      color: #D4AF37;
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 20px;
+      color: #8B1538;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 15px;
     }
     .film-info {
-      background: rgba(255,255,255,0.05);
+      background: rgba(139, 21, 56, 0.1);
+      border: 2px solid rgba(139, 21, 56, 0.2);
       border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 25px;
+      padding: 12px;
+      margin-bottom: 15px;
     }
     .film-title {
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 600;
+      color: #4A1520;
+      font-size: 1rem;
+      font-weight: 700;
     }
     .film-type-badge {
-      color: ${filmTypeColor};
-      font-size: 0.85rem;
+      color: #8B1538;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      font-weight: 600;
+      margin-top: 4px;
     }
     .qr-container {
       background: white;
-      padding: 15px;
-      border-radius: 16px;
+      padding: 10px;
+      border-radius: 12px;
       display: inline-block;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      border: 3px solid #8B1538;
+      box-shadow: 0 4px 20px rgba(139, 21, 56, 0.25);
     }
     .qr-container img {
       display: block;
-      width: 200px;
-      height: 200px;
+      width: 140px;
+      height: 140px;
     }
     .pass-id {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.8rem;
+      color: #8B1538;
+      font-size: 0.65rem;
       font-family: monospace;
       letter-spacing: 1px;
+      opacity: 0.7;
     }
     .pass-footer {
-      background: rgba(0,0,0,0.3);
-      padding: 15px;
+      background: rgba(139, 21, 56, 0.95);
+      padding: 12px;
       text-align: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
     .footer-text {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.75rem;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.65rem;
+    }
+    .footer-brand {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
     }
     @media print {
       body { background: white; }
-      .pass-card { box-shadow: none; border: 2px solid #1a0a2e; }
+      .pass-card { box-shadow: none; }
     }
   </style>
 </head>
@@ -247,17 +294,11 @@ function generatePassHTML(pass, qrDataUrl) {
   <div class="pass-card">
     <div class="pass-header">
       <div class="festival-name">The Bhopal Film Festival</div>
-      <div style="color: #1a0a2e; font-size: 0.85rem; margin-top: 2px;">21 - 22 February 2026</div>
-      <div style="color: #1a0a2e; font-size: 0.85rem;">21 - 22 February 2026</div>
-      <div class="pass-type">${filmTypeLabel} FILM</div>
+      <div class="festival-date">21 - 22 February 2026</div>
+      <div class="pass-type">${filmTypeLabel}</div>
     </div>
     <div class="pass-body">
-      <div class="holder-name">${pass.name}</div>
-      <div class="designation">${pass.designation}</div>
-      <div class="film-info">
-        <div class="film-title">${pass.filmTitle}</div>
-        <div class="film-type-badge">${pass.filmType} Selection</div>
-      </div>
+      <div class="holder-name">${pass.name}</div>${designationSection}${filmInfoSection}
       <div class="qr-container">
         <img src="${qrDataUrl}" alt="QR Code">
       </div>
@@ -265,7 +306,7 @@ function generatePassHTML(pass, qrDataUrl) {
     </div>
     <div class="pass-footer">
       <div class="footer-text">Present this QR code at the venue entrance for verification</div>
-      <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 500;">Built by ETWOT</div>
+      <div class="footer-brand">Built by ETWOT</div>
     </div>
   </div>
 </body>
