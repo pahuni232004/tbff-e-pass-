@@ -268,10 +268,13 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+      align-items: stretch;
     }
 
     .film-type-option {
       position: relative;
+      display: flex;
+      height: 100%;
     }
 
     .film-type-option input {
@@ -281,14 +284,21 @@
     }
 
     .film-type-option label {
-      display: block;
-      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 12px;
+      height: 100%;
+      width: 100%;
+      gap: 4px;
       background: rgba(0,0,0,0.2);
       border: 2px solid rgba(255,255,255,0.1);
       border-radius: 14px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
+      box-sizing: border-box;
     }
 
     .film-type-option input:checked + label {
@@ -300,23 +310,61 @@
       border-color: rgba(212,175,55,0.5);
     }
 
+    .film-type-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+    }
+
     .film-type-name {
       font-weight: 600;
-      margin-bottom: 4px;
+      font-size: 1rem;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
     }
 
     .film-type-passes {
       font-size: 0.8rem;
       color: rgba(255,255,255,0.5);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .film-type-selector.three-cols {
       grid-template-columns: 1fr 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .film-type-selector.four-cols {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      align-items: stretch;
+    }
+
+    @media (max-width: 950px) {
+      .film-type-selector.four-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .film-type-selector.four-cols {
+        grid-template-columns: 1fr;
+      }
     }
 
     .competition-label .film-type-name { color: #D4AF37; }
     .showcase-label .film-type-name { color: #ff6b35; }
     .visitor-label .film-type-name { color: #60a5fa; }
+    .vip-label .film-type-name { color: #fbbf24; }
 
     .btn {
       display: inline-flex;
@@ -460,6 +508,12 @@
       background: #2E8B8B;
       color: white;
       border-color: #236B6B;
+    }
+
+    .badge-vip {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #1a0a2e;
+      border-color: #d97706;
     }
 
     .pass-body {
@@ -650,6 +704,7 @@
       .form-input, .form-select { padding: 14px 16px; font-size: 0.95rem; border-radius: 12px; }
       .film-type-selector { grid-template-columns: 1fr; gap: 10px; }
       .film-type-selector.three-cols { grid-template-columns: 1fr; }
+      .film-type-selector.four-cols { grid-template-columns: 1fr; }
       .film-type-option label { padding: 14px; }
       .btn { padding: 15px 24px; font-size: 0.95rem; border-radius: 12px; }
       .saved-passes { margin-top: 28px; padding-top: 22px; }
@@ -809,6 +864,12 @@
       border: 1px solid rgba(255,107,53,0.3);
     }
 
+    .type-vip {
+      background: rgba(251,191,36,0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.3);
+    }
+
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -888,15 +949,15 @@
             <input type="text" id="name" class="form-input" placeholder="Enter pass holder's full name" required>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
+          <div class="form-row" id="contactInfoGroup">
+            <div class="form-group" id="emailGroup">
               <label class="form-label">
                 <span class="form-label-icon">📧</span>
                 Email
               </label>
               <input type="email" id="email" class="form-input" placeholder="email@example.com">
             </div>
-            <div class="form-group">
+            <div class="form-group" id="phoneGroup">
               <label class="form-label">
                 <span class="form-label-icon">📱</span>
                 Phone
@@ -918,26 +979,37 @@
               <span class="form-label-icon">🏆</span>
               Pass Category <span class="required">*</span>
             </label>
-            <div class="film-type-selector three-cols">
+            <div class="film-type-selector four-cols">
               <div class="film-type-option">
                 <input type="radio" name="filmType" id="competition" value="competition">
                 <label for="competition" class="competition-label">
-                  <div class="film-type-name">🥇 Competition</div>
+                  <div class="film-type-icon">🥇</div>
+                  <div class="film-type-name">Competition</div>
                   <div class="film-type-passes">5 passes</div>
                 </label>
               </div>
               <div class="film-type-option">
                 <input type="radio" name="filmType" id="showcase" value="showcase">
                 <label for="showcase" class="showcase-label">
-                  <div class="film-type-name">🎭 Showcase</div>
+                  <div class="film-type-icon">🎭</div>
+                  <div class="film-type-name">Showcase</div>
                   <div class="film-type-passes">8 passes</div>
                 </label>
               </div>
               <div class="film-type-option">
                 <input type="radio" name="filmType" id="visitor" value="visitor">
                 <label for="visitor" class="visitor-label">
-                  <div class="film-type-name">🎟️ Visitor</div>
+                  <div class="film-type-icon">🎟️</div>
+                  <div class="film-type-name">Visitor</div>
                   <div class="film-type-passes">General entry</div>
+                </label>
+              </div>
+              <div class="film-type-option">
+                <input type="radio" name="filmType" id="vip" value="vip">
+                <label for="vip" class="vip-label">
+                  <div class="film-type-icon">⭐</div>
+                  <div class="film-type-name">VIP</div>
+                  <div class="film-type-passes">Premium access</div>
                 </label>
               </div>
             </div>
@@ -1053,8 +1125,10 @@
     const competitionRadio = document.getElementById('competition');
     const showcaseRadio = document.getElementById('showcase');
     const visitorRadio = document.getElementById('visitor');
+    const vipRadio = document.getElementById('vip');
     const filmTitleGroup = document.getElementById('filmTitleGroup');
     const designationGroup = document.getElementById('designationGroup');
+    const contactInfoGroup = document.getElementById('contactInfoGroup');
 
     // Preview elements
     const previewName = document.getElementById('previewName');
@@ -1076,18 +1150,33 @@
     competitionRadio.addEventListener('change', handleCategoryChange);
     showcaseRadio.addEventListener('change', handleCategoryChange);
     visitorRadio.addEventListener('change', handleCategoryChange);
+    vipRadio.addEventListener('change', handleCategoryChange);
 
     function getFilmType() {
       if (competitionRadio.checked) return 'competition';
       if (showcaseRadio.checked) return 'showcase';
       if (visitorRadio.checked) return 'visitor';
+      if (vipRadio.checked) return 'vip';
       return '';
     }
 
     function handleCategoryChange() {
       const isVisitor = visitorRadio.checked;
-      filmTitleGroup.style.display = isVisitor ? 'none' : 'block';
-      designationGroup.style.display = isVisitor ? 'none' : 'block';
+      const isVip = vipRadio.checked;
+      const hideFields = isVisitor || isVip;
+      
+      filmTitleGroup.style.display = hideFields ? 'none' : 'block';
+      designationGroup.style.display = hideFields ? 'none' : 'block';
+      contactInfoGroup.style.display = hideFields ? 'none' : 'grid';
+      
+      // Clear fields when switching to Visitor/VIP
+      if (hideFields) {
+        filmTitleInput.value = '';
+        designationInput.value = '';
+        emailInput.value = '';
+        phoneInput.value = '';
+      }
+      
       updatePreview();
     }
 
@@ -1096,10 +1185,11 @@
       
       const filmType = getFilmType();
       const isVisitor = filmType === 'visitor';
+      const isVip = filmType === 'vip';
       
       // Show/hide film info based on category
-      document.querySelector('.pass-film-info').style.display = isVisitor ? 'none' : 'block';
-      previewDesignation.style.display = isVisitor ? 'none' : 'block';
+      document.querySelector('.pass-film-info').style.display = (isVisitor || isVip) ? 'none' : 'block';
+      previewDesignation.style.display = (isVisitor || isVip) ? 'none' : 'block';
       
       previewDesignation.textContent = designationInput.value || 'Team Member';
       previewFilm.textContent = filmTitleInput.value || 'Film Title';
@@ -1116,6 +1206,10 @@
         previewFilmType.textContent = '';
         previewBadge.textContent = 'VISITOR PASS';
         previewBadge.className = 'pass-type-badge badge-visitor';
+      } else if (filmType === 'vip') {
+        previewFilmType.textContent = '';
+        previewBadge.textContent = 'VIP PASS';
+        previewBadge.className = 'pass-type-badge badge-vip';
       } else {
         previewFilmType.textContent = 'Selection Type';
         previewBadge.textContent = 'PASS TYPE';
@@ -1135,15 +1229,16 @@
       const phone = phoneInput.value.trim();
       const filmType = getFilmType();
       const isVisitor = filmType === 'visitor';
-      const filmTitle = isVisitor ? '' : filmTitleInput.value.trim();
-      const designation = isVisitor ? 'Visitor' : (designationInput.value.trim() || 'Team Member');
+      const isVip = filmType === 'vip';
+      const filmTitle = (isVisitor || isVip) ? '' : filmTitleInput.value.trim();
+      const designation = isVisitor ? 'Visitor' : (isVip ? 'VIP Guest' : (designationInput.value.trim() || 'Team Member'));
 
       if (!name || !filmType) {
         showAlert('Please fill in all required fields', 'error');
         return;
       }
 
-      if (!isVisitor && !filmTitle) {
+      if (!isVisitor && !isVip && !filmTitle) {
         showAlert('Please enter the film title', 'error');
         return;
       }
@@ -1236,7 +1331,7 @@
         <div class="saved-item">
           <div class="saved-item-info">
             <h4>${pass.name}</h4>
-            <p>${pass.filmTitle} • ${pass.passId}</p>
+            <p>${pass.filmTitle || pass.designation || ''} • ${pass.passId}</p>
           </div>
           <span class="saved-item-type type-${pass.filmType}">${pass.filmType}</span>
         </div>
@@ -1275,16 +1370,16 @@
         // Content starts below the folk art header (approximately 30% from top)
         const contentStartY = height * 0.30;
 
-        // Festival name
+        // Festival name - shifted up
         ctx.fillStyle = '#8B1538';
         ctx.font = 'bold 22px Playfair Display, Georgia, serif';
         ctx.textAlign = 'center';
-        ctx.fillText('The Bhopal Film Festival', width/2, contentStartY + 25);
+        ctx.fillText('The Bhopal Film Festival', width/2, contentStartY - 23);
         
         ctx.font = 'bold 13px DM Sans, Arial, sans-serif';
-        ctx.fillText('21 - 22 February 2026', width/2, contentStartY + 45);
+        ctx.fillText('21 - 22 February 2026', width/2, contentStartY - 5);
 
-        // Film type badge
+        // Film type badge - shifted up
         let badgeColor, badgeText, badgeTextColor, badgeBorderColor;
         if (currentPassData.filmType === 'competition') {
           badgeColor = '#8B1538';
@@ -1296,6 +1391,11 @@
           badgeText = 'SHOWCASE FILM';
           badgeTextColor = '#ffffff';
           badgeBorderColor = '#e55a25';
+        } else if (currentPassData.filmType === 'vip') {
+          badgeColor = '#fbbf24';
+          badgeText = 'VIP PASS';
+          badgeTextColor = '#1a0a2e';
+          badgeBorderColor = '#d97706';
         } else {
           badgeColor = '#2E8B8B';
           badgeText = 'VISITOR PASS';
@@ -1306,7 +1406,7 @@
         const badgeWidth = 140;
         const badgeHeight = 24;
         const badgeX = (width - badgeWidth) / 2;
-        const badgeY = contentStartY + 55;
+        const badgeY = contentStartY + 5;
         
         // Badge border
         ctx.fillStyle = badgeBorderColor;
@@ -1325,82 +1425,114 @@
         ctx.fillText(badgeText, width/2, badgeY + 16);
 
         const isVisitor = currentPassData.filmType === 'visitor';
-        let currentY = contentStartY + 100;
+        const isVip = currentPassData.filmType === 'vip';
+        let currentY = contentStartY + 65;
 
         // Holder name
         ctx.fillStyle = '#4A1520';
         ctx.font = 'bold 26px Playfair Display, Georgia, serif';
         ctx.fillText(currentPassData.name, width/2, currentY);
-        currentY += 25;
+        currentY += 20;
 
-        // Designation (not for visitors)
-        if (!isVisitor) {
+        // Designation (not for visitors/VIP)
+        if (!isVisitor && !isVip) {
           ctx.fillStyle = '#8B1538';
           ctx.font = '600 14px DM Sans, Arial, sans-serif';
           ctx.fillText(currentPassData.designation, width/2, currentY);
-          currentY += 25;
+          currentY += 20;
 
           // Film info box
+          const filmBoxY = currentY;
+          const filmBoxHeight = 55;
           ctx.fillStyle = 'rgba(139, 21, 56, 0.1)';
           ctx.strokeStyle = 'rgba(139, 21, 56, 0.3)';
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.roundRect(40, currentY, width - 80, 55, 10);
+          ctx.roundRect(40, filmBoxY, width - 80, filmBoxHeight, 10);
           ctx.fill();
           ctx.stroke();
 
           ctx.fillStyle = '#4A1520';
           ctx.font = 'bold 16px DM Sans, Arial, sans-serif';
-          ctx.fillText(currentPassData.filmTitle, width/2, currentY + 25);
+          ctx.fillText(currentPassData.filmTitle, width/2, filmBoxY + 25);
 
           ctx.fillStyle = '#8B1538';
           ctx.font = '600 10px DM Sans, Arial, sans-serif';
-          ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, currentY + 45);
+          ctx.fillText(currentPassData.filmType.toUpperCase() + ' SELECTION', width/2, filmBoxY + 45);
           
-          currentY += 70;
+          currentY += filmBoxHeight + 12;
+        } else if (isVip) {
+          // For VIP, show designation but no film info
+          ctx.fillStyle = '#8B1538';
+          ctx.font = '600 14px DM Sans, Arial, sans-serif';
+          ctx.fillText(currentPassData.designation, width/2, currentY);
+          currentY += 20;
         }
 
-        // QR Code
-        const qrSize = 130;
-        const qrX = (width - qrSize - 20) / 2;
-        const qrY = currentY;
+        // Footer position - always at bottom
+        const footerY = height - 50;
+        const footerHeight = 50;
         
-        // QR Code border
-        ctx.fillStyle = '#8B1538';
-        ctx.beginPath();
-        ctx.roundRect(qrX - 5, qrY - 5, qrSize + 30, qrSize + 30, 14);
-        ctx.fill();
+        // QR Code - match preview structure exactly (scaled for scanning)
+        // Preview uses 120px QR with 8px padding and 3px border
+        // Reduced by 25% from 160px to 120px
+        const qrSize = 120; // Reduced by 25% from 160px
+        const qrPadding = 8;
+        const qrBorder = 3;
+        const qrContainerSize = qrSize + (qrPadding * 2);
+        const qrTotalSize = qrContainerSize + (qrBorder * 2);
+        const qrX = (width - qrTotalSize) / 2;
         
-        // QR Code background
+        // Calculate QR position to avoid footer overlap
+        const passIdHeight = 15; // Space for pass ID
+        const spacing = 6; // Match preview margin-bottom: 6px
+        // Shift QR up by 50px (was +50, now +0)
+        const baseQrY = currentY;
+        // Calculate maxQrY - increase buffer significantly to allow positioning
+        const maxQrY = footerY - qrTotalSize - passIdHeight - spacing + 40;
+        // Use the desired position
+        const qrY = baseQrY;
+        
+        // QR Code container - white background with rounded corners (matches .qr-container)
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.roundRect(qrX, qrY, qrSize + 20, qrSize + 20, 10);
+        ctx.roundRect(qrX + qrBorder, qrY + qrBorder, qrContainerSize, qrContainerSize, 10);
         ctx.fill();
+        
+        // QR Code border - 3px solid #8B1538 (matches preview)
+        ctx.strokeStyle = '#8B1538';
+        ctx.lineWidth = qrBorder;
+        ctx.beginPath();
+        ctx.roundRect(qrX + qrBorder, qrY + qrBorder, qrContainerSize, qrContainerSize, 10);
+        ctx.stroke();
 
         // Draw QR code
         const qrImg = new Image();
         qrImg.onload = function() {
-          ctx.drawImage(qrImg, qrX + 10, qrY + 10, qrSize, qrSize);
+          // Draw QR code inside container with padding (matches #qrcode)
+          ctx.drawImage(qrImg, qrX + qrBorder + qrPadding, qrY + qrBorder + qrPadding, qrSize, qrSize);
           
-          // Pass ID
+          // Pass ID below QR code - match preview styling (.pass-id)
+          const passIdY = qrY + qrTotalSize + spacing;
           ctx.fillStyle = '#8B1538';
           ctx.font = '10px monospace';
           ctx.globalAlpha = 0.7;
-          ctx.fillText(currentPassData.passId, width/2, qrY + qrSize + 40);
+          ctx.fillText(currentPassData.passId, width/2, passIdY);
           ctx.globalAlpha = 1;
 
-          // Footer
-          const footerY = height - 50;
+          // Footer - match preview styling
           ctx.fillStyle = 'rgba(139, 21, 56, 0.95)';
-          ctx.fillRect(0, footerY, width, 50);
+          ctx.fillRect(0, footerY, width, footerHeight);
 
-          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          // Footer text - match preview exactly (.pass-footer-text)
+          ctx.fillStyle = 'rgba(255,255,255,0.85)';
           ctx.font = '10px DM Sans, Arial, sans-serif';
-          ctx.fillText('Present this QR code at the venue entrance', width/2, footerY + 18);
+          ctx.fillText('Present this QR code at the venue entrance for verification', width/2, footerY + 18);
           
-          ctx.fillStyle = 'rgba(255,255,255,0.75)';
-          ctx.font = 'bold 11px DM Sans, Arial, sans-serif';
-          ctx.fillText('Built by ETWOT', width/2, footerY + 36);
+          // Footer credit - match preview (.pass-built-by)
+          ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          ctx.font = '11px DM Sans, Arial, sans-serif';
+          ctx.fillText('Built by etwot', width/2, footerY + 36);
 
           // Download
           const link = document.createElement('a');
@@ -1447,67 +1579,113 @@
       ctx.lineWidth = 15;
       ctx.strokeRect(7.5, 7.5, width - 15, height - 15);
 
-      // Festival name
+      // Festival name - shifted up
       ctx.fillStyle = '#8B1538';
       ctx.font = 'bold 24px Playfair Display, Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('The Bhopal Film Festival', width/2, 60);
+      ctx.fillText('The Bhopal Film Festival', width/2, 17);
       ctx.font = 'bold 14px DM Sans, Arial, sans-serif';
-      ctx.fillText('21 - 22 February 2026', width/2, 85);
+      ctx.fillText('21 - 22 February 2026', width/2, 39);
 
       // Rest of the content...
       const isVisitor = currentPassData.filmType === 'visitor';
+      const isVip = currentPassData.filmType === 'vip';
       
-      // Badge
+      // Badge - shifted up
       let badgeColor = currentPassData.filmType === 'competition' ? '#8B1538' : 
-                       currentPassData.filmType === 'showcase' ? '#ff6b35' : '#2E8B8B';
+                       currentPassData.filmType === 'showcase' ? '#ff6b35' :
+                       currentPassData.filmType === 'vip' ? '#fbbf24' : '#2E8B8B';
+      let badgeTextColor = isVip ? '#1a0a2e' : '#ffffff';
       ctx.fillStyle = badgeColor;
       ctx.beginPath();
-      ctx.roundRect(130, 100, 140, 26, 13);
+      ctx.roundRect(130, 52, 140, 26, 13);
       ctx.fill();
       
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = badgeTextColor;
       ctx.font = 'bold 10px DM Sans, Arial, sans-serif';
-      ctx.fillText(currentPassData.filmType.toUpperCase() + (isVisitor ? ' PASS' : ' FILM'), width/2, 117);
+      ctx.fillText(currentPassData.filmType.toUpperCase() + ((isVisitor || isVip) ? ' PASS' : ' FILM'), width/2, 69);
 
       // Name
       ctx.fillStyle = '#4A1520';
       ctx.font = 'bold 28px Playfair Display, Georgia, serif';
-      ctx.fillText(currentPassData.name, width/2, 170);
+      ctx.fillText(currentPassData.name, width/2, 135);
 
-      let qrY = 200;
-      if (!isVisitor) {
+      let currentY = 155;
+      if (!isVisitor && !isVip) {
         ctx.fillStyle = '#8B1538';
         ctx.font = '16px DM Sans, Arial, sans-serif';
-        ctx.fillText(currentPassData.designation, width/2, 200);
+        ctx.fillText(currentPassData.designation, width/2, currentY);
+        currentY += 20;
+        
         ctx.fillStyle = '#4A1520';
         ctx.font = 'bold 18px DM Sans, Arial, sans-serif';
-        ctx.fillText(currentPassData.filmTitle, width/2, 250);
-        qrY = 280;
+        ctx.fillText(currentPassData.filmTitle, width/2, currentY);
+        currentY += 30;
+      } else if (isVip) {
+        ctx.fillStyle = '#8B1538';
+        ctx.font = '16px DM Sans, Arial, sans-serif';
+        ctx.fillText(currentPassData.designation, width/2, currentY);
+        currentY += 20;
+      } else {
+        currentY += 20;
       }
 
-      // QR background
+      // Footer position
+      const footerY = height - 50;
+      const footerHeight = 50;
+      
+      // QR Code - match preview structure exactly (scaled for scanning)
+      const qrSize = 120; // Reduced by 25% from 160px
+      const qrPadding = 8;
+      const qrBorder = 3;
+      const qrContainerSize = qrSize + (qrPadding * 2);
+      const qrTotalSize = qrContainerSize + (qrBorder * 2);
+      const qrX = (width - qrTotalSize) / 2;
+      
+      // Calculate QR position to avoid footer overlap
+      const passIdHeight = 15;
+      const spacing = 6;
+      // Shift QR up by 50px (was +50, now +0)
+      const baseQrY = currentY;
+      // Calculate maxQrY - increase buffer significantly to allow positioning
+      const maxQrY = footerY - qrTotalSize - passIdHeight - spacing + 40;
+      // Use the desired position
+      let qrY = baseQrY;
+
+      // QR Code container - white background with rounded corners
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.roundRect((width - 160) / 2, qrY, 160, 160, 12);
+      ctx.roundRect(qrX + qrBorder, qrY + qrBorder, qrContainerSize, qrContainerSize, 10);
       ctx.fill();
+      
+      // QR Code border - 3px solid #8B1538
+      ctx.strokeStyle = '#8B1538';
+      ctx.lineWidth = qrBorder;
+      ctx.beginPath();
+      ctx.roundRect(qrX + qrBorder, qrY + qrBorder, qrContainerSize, qrContainerSize, 10);
+      ctx.stroke();
 
       const qrImg = new Image();
       qrImg.onload = function() {
-        ctx.drawImage(qrImg, (width - 140) / 2, qrY + 10, 140, 140);
+        ctx.drawImage(qrImg, qrX + qrBorder + qrPadding, qrY + qrBorder + qrPadding, qrSize, qrSize);
         
+        // Pass ID below QR code
+        const passIdY = qrY + qrTotalSize + spacing;
         ctx.fillStyle = '#8B1538';
         ctx.font = '11px monospace';
-        ctx.fillText(currentPassData.passId, width/2, qrY + 175);
+        ctx.globalAlpha = 0.7;
+        ctx.fillText(currentPassData.passId, width/2, passIdY);
+        ctx.globalAlpha = 1;
 
-        // Footer
-        ctx.fillStyle = '#8B1538';
-        ctx.fillRect(0, height - 50, width, 50);
-        ctx.fillStyle = '#ffffff';
+        // Footer - match preview styling
+        ctx.fillStyle = 'rgba(139, 21, 56, 0.95)';
+        ctx.fillRect(0, footerY, width, footerHeight);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
         ctx.font = '10px DM Sans, Arial, sans-serif';
-        ctx.fillText('Present this QR code at the venue entrance', width/2, height - 32);
-        ctx.font = 'bold 11px DM Sans, Arial, sans-serif';
-        ctx.fillText('Built by ETWOT', width/2, height - 15);
+        ctx.fillText('Present this QR code at the venue entrance for verification', width/2, footerY + 18);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.font = '11px DM Sans, Arial, sans-serif';
+        ctx.fillText('Built by etwot', width/2, footerY + 36);
 
         const link = document.createElement('a');
         link.download = `${currentPassData.passId}_${currentPassData.name.replace(/\s+/g, '_')}.png`;
@@ -1527,7 +1705,9 @@
         return;
       }
 
-      const filmTypeLabel = currentPassData.filmType === 'competition' ? 'COMPETITION' : 'SHOWCASE';
+      const filmTypeLabel = currentPassData.filmType === 'competition' ? 'COMPETITION' : 
+                           currentPassData.filmType === 'showcase' ? 'SHOWCASE' :
+                           currentPassData.filmType === 'vip' ? 'VIP' : 'VISITOR';
 
       const subject = encodeURIComponent(`Your E-Pass for The Bhopal Film Festival 2026 - ${currentPassData.name}`);
       
